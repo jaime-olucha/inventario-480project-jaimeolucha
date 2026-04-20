@@ -1,10 +1,10 @@
 import type { EntityId } from "../types/EntityId";
-import type { Environtment } from "../types/Environtment";
+import type { Environment } from "../types/Environment";
 
 
 export interface Link {
     id: EntityId;
-    environtment: Environtment;
+    environtment: Environment;
     url: string;
     developmentId: EntityId
 }
