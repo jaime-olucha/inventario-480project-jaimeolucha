@@ -1,0 +1,1 @@
+export type Environtment = 'STAGE' | 'PREPRODUCTION' | 'PRODUCTION';
