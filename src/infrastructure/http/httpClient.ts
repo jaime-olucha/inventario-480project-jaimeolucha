@@ -1,26 +1,36 @@
+import axios, { type AxiosRequestConfig } from "axios"
 import type { HttpRequestOptions } from "./interface/HttpRequestOption";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+const axiosInstance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
 
 export async function httpClient<TResponse, TBody = undefined>(options: HttpRequestOptions<TBody>): Promise<TResponse> {
 
     const { method, path, body, token } = options;
 
-    const response = await fetch(`${API_BASE_URL}${path}`, {
-        method, headers: {
-            "Content-Type": "application/json", ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: body ? JSON.stringify(body) : undefined,
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status} ${response.statusText}: ${errorText}`)
+    const axiosConfig: AxiosRequestConfig = {
+        method,
+        url: path,
+        data: body,
+        headers: {
+            ...(token && { Authorization: `Bearer ${token}` }),
+        }
     }
 
-    if (response.status === 204) {
-        return undefined as TResponse;
-    }
+    try {
+        const response = await axiosInstance.request<TResponse>(axiosConfig);
+        return response.data;
 
-    return response.json() as Promise<TResponse>
+    } catch (error: any) {
+        const status = error.response?.status;
+        const message = error.response?.data ?? error.message ?? "Unknown error";
+
+        throw new Error(`HTTP ${status}: ${JSON.stringify(message)}`);
+    }
 }
