@@ -1,11 +1,13 @@
-import { LoginTest } from "./ui/pages/LoginPage/LoginTest";
+import { BrowserRouter } from "react-router-dom";
+import { useAuthInit } from "./ui/hooks/useAuthInit";
+import { AppRoutes } from "./ui/routes/AppRouter";
 
 function App() {
+    useAuthInit();
     return (
-        <>
-            <h1>Hola mundo</h1>
-            <LoginTest />
-        </>
+        <BrowserRouter>
+            <AppRoutes />
+        </BrowserRouter>
     );
 }
 

@@ -1,1 +1,1 @@
-export type SystemRole = 'ADMIN' | 'EMPLOYEE';
+export type SystemRole = 'ROLE_ADMIN' | 'ROLE_EMPLOYEE';
