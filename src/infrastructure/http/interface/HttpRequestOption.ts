@@ -1,7 +1,7 @@
-import type { HttpMethods } from "../types/HttpMethods";
+import type { HttpMethodType } from "../types/HttpMethods";
 
 export interface HttpRequestOptions<TBody> {
-    method: HttpMethods;
+    method: HttpMethodType;
     path: string;
     body?: TBody;
     token?: string;
