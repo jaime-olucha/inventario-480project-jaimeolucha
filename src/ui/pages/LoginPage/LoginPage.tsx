@@ -21,6 +21,7 @@ export const LoginPage = () => {
         try {
             const response = await loginApi(data);
             setToken(response.token);
+            console.log(response.token);
 
         } catch (error) {
 
