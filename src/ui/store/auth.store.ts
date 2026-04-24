@@ -5,11 +5,11 @@ const STORAGE_KEY = 'token'
 
 export const useAuthStore = create<AuthState>((set) => ({
 
-    token: sessionStorage.getItem(STORAGE_KEY),
-    isAuthenticated: !!sessionStorage.getItem(STORAGE_KEY),
+    token: localStorage.getItem(STORAGE_KEY),
+    isAuthenticated: !!localStorage.getItem(STORAGE_KEY),
 
     setToken: (token) => {
-        sessionStorage.setItem(STORAGE_KEY, token);
+        localStorage.setItem(STORAGE_KEY, token);
 
         set({
             token,
@@ -18,7 +18,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     },
 
     logout: () => {
-        sessionStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_KEY);
 
         set({
             token: null,

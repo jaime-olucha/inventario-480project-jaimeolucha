@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from '../../store/auth.store'
 import type { LoginFormData } from "./loginSchema";
 import { loginSchema } from "./loginSchema";
-import { loginApi } from "../../../infrastructure/api/auth.api";
+import { loginApi } from "../../../infrastructure/api/authRepository";
 import logoWhite from "../../assets/logo-480/480dev_white.webp";
 import './LoginPage.scss';
 
@@ -21,7 +21,6 @@ export const LoginPage = () => {
         try {
             const response = await loginApi(data);
             setToken(response.token);
-            console.log(response.token);
 
         } catch (error) {
 
