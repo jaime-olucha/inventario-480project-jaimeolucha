@@ -1,37 +1,146 @@
 .dashboard-page {
+  display: flex;
+  min-height: 100vh;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  .info {
+    color: var(--color-text-secondary);
+  }
+
+  .iconSvg {
+    height: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  .aside {
+    flex: 0 0 200px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+
+    img {
+      margin-top: 20px;
+      width: 100px;
+    }
+  }
+
+  .content {
     padding: 20px;
-    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 
-    h1 {
-        font-size: 24px;
+
+
+    .profile_card {
+      display: flex;
+      gap: 20px;
+      position: relative;
+      align-items: center;
+      background-color: white;
+      padding: 25px;
+      border: 1px solid #dfdfdf;
+      border-radius: 10px;
+
+      .logo-user {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        margin-top: 20px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 18px;
+        background-color: var(--primary);
+      }
+
+      .card-user_info {
+        display: flex;
+        width: 70%;
+        justify-content: space-between;
+      }
+
+      .card_badge {
+        position: absolute;
+        bottom: 30px;
+        left: 100px;
+        padding: 2px 5px;
+        font-size: 9px;
+        font-weight: bold;
+        background-color: #ffe2e2;
+        color: rgb(202, 14, 14);
+        border-radius: 10px;
+      }
     }
 
-    .dashboard-page_info {
-        margin-top: 5px;
-        margin-bottom: 15px;
-        font-size: 11px;
-        color: var(--color-text-secondary);
+    .card {
+      background-color: white;
+      padding: 25px;
+      border: 1px solid #dfdfdf;
+      border-radius: 10px;
+
+      * {
+        list-style: none;
+        text-decoration: none;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .projects-header {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .btn-see-all {
+        height: fit-content;
+        padding: 8px 14px;
+        border: 1px solid #dfdfdf;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        line-height: 1;
+        background: transparent;
+        cursor: pointer;
+
+        &:hover {
+          border-color: var(--primary);
+          color: var(--primary);
+        }
+      }
+
+      .card_container ul {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+
+        .li-map {
+          flex: 0 1 calc(50% - 8px);
+          min-width: 250px;
+
+          .card {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+          }
+
+          &:hover .card {
+            box-shadow: 0 4px 20px #dfdfdf;
+            overflow: hidden;
+          }
+        }
+      }
     }
+  }
 }
-
-
-
-
-
-
-/*
-        <section className="dashboard-page">
-            <h1 className="dashboard-page_header">Bienvenid@ {user?.name}</h1>
-
-            <article className="card">
-                <p className="card_header">Tu perfil</p>
-                <div className="card_logo">
-                    <h2 className="logo-user">{initials}</h2>
-                </div>
-                <div className="card_userInfo">
-                    <p><User className="iconSvg" /><strong>Name:</strong> {user?.name} {user?.surname}</p>
-                    <p><Mail className="iconSvg" /><strong>Correo:</strong> {user?.email}</p>
-                </div>
-                <div className="card_badge">{getRoleBadge()}</div>
-            </article>
-*/
