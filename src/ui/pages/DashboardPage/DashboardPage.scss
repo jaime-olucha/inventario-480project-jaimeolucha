@@ -17,7 +17,10 @@
 
   .iconSvg {
     height: 14px;
+    width: 14px;
     color: var(--color-text-secondary);
+    vertical-align: -2px;
+    margin-right: 6px;
   }
 
   .aside {
@@ -137,7 +140,25 @@
 
           &:hover .card {
             box-shadow: 0 4px 20px #dfdfdf;
-            overflow: hidden;
+          }
+
+          &:hover .icon-into_project {
+            color: black;
+          }
+
+          .project-info {
+            position: relative;
+
+            .icon-into_project {
+              position: absolute;
+              right: 0px;
+              top: 0px;
+              transition: color 0.15s ease;
+            }
+
+            .team-members {
+              margin-top: 30px;
+            }
           }
         }
       }

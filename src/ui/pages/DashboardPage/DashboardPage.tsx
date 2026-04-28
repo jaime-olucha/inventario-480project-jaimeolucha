@@ -1,11 +1,11 @@
 
 import { useUserStore } from "../../store/user.store";
-import { User, Mail } from 'lucide-react';
+import { User, Mail, SquareArrowRightEnter } from 'lucide-react';
 import { SYSTEM_ROLES } from "../../../domain/types/SystemRole";
 import { getUserProjectsApi } from "../../../infrastructure/api/userRepository";
 import { useEffect, useState } from "react";
 import type { UserProjects } from "../../../domain/entities/UserProjects";
-import { API_ENDPOINTS } from "../../../infrastructure/api/endpoints";
+import { ROUTES } from "@/ui/routes/routes";
 import './DashboardPage.scss';
 import logoWhite from "../../assets/logo-480/480dev_white.webp";
 import { Link } from "react-router-dom";
@@ -18,7 +18,6 @@ export const DashboardPage = () => {
     if (!user) return;
 
     getUserProjectsApi(user.id).then(setProjects);
-    console.log(projects);
   }, [user])
 
 
@@ -61,7 +60,7 @@ export const DashboardPage = () => {
               <h2 className="card_header">Tus Proyectos</h2>
               <p className="info">Proyectos en los que estas asignado</p>
             </div>
-            <Link to={API_ENDPOINTS.PROJECTS.LIST} className="btn-see-all">Ver Todos</Link>
+            <Link to={ROUTES.PROJECTS.LIST} className="btn-see-all">Ver Todos</Link>
           </div>
           <div className="card_container">
             {projects.length === 0 ? (
@@ -70,12 +69,13 @@ export const DashboardPage = () => {
               <ul className="projects-list">
                 {projects.slice(0, 4).map((project) => (
                   <li className="li-map" key={project.id}>
-                    <Link to={API_ENDPOINTS.PROJECTS.BY_ID(project.id)} >
+                    <Link to={ROUTES.PROJECTS.BY_ID(project.id)} >
                       <div className="card">
                         <div className="project-info">
                           <h2 className="card_header">{project.name}</h2>
                           <p className="info">{project.description}</p>
-                          <p className="info"><User className="iconSvg" />{project.team_members} Miembros</p>
+                          <p className="info team-members"><User className="iconSvg" />{project.team_members} Miembros</p>
+                          <span className="iconSvg icon-into_project"><SquareArrowRightEnter /></span>
                         </div>
                       </div>
                     </Link>
@@ -85,8 +85,30 @@ export const DashboardPage = () => {
             )}
           </div>
         </article>
-      </div>
-    </section>
 
+        <article className="card">
+          <div className="projects-header">
+            <div>
+              <h2 className="card_header">Horas Imputadas</h2>
+              <p className="info">Total todas las imputaciones: { }</p>
+            </div>
+          </div>
+          <div className="card_container">
+            {projects.length === 0 ? (
+              <p>No tienes proyectos asignados</p>
+            ) : (
+              <ul className="projects-list">
+                {projects.slice(0, 4).map((project) => (
+                  <li className="li-map" key={project.id}>
+                    <h2 className="card_header">....</h2>
+                    <p className="info">....</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </article>
+      </div >
+    </section >
   );
 };
