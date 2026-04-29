@@ -1,5 +1,6 @@
 import axios, { type AxiosRequestConfig } from "axios"
 import type { HttpRequestOptions } from "./interface/HttpRequestOption";
+import { useAuthStore } from "../../ui/store/auth.store";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,10 +13,11 @@ const axiosInstance = axios.create({
 
 export async function httpClient<TResponse, TBody = undefined>(options: HttpRequestOptions<TBody>): Promise<TResponse> {
 
-    const { method, path, body, token } = options;
+    const { method, path, body } = options;
+    const token = useAuthStore.getState().token;
 
     const axiosConfig: AxiosRequestConfig = {
-        method,
+        method: method,
         url: path,
         data: body,
         headers: {
