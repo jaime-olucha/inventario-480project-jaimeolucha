@@ -1,6 +1,7 @@
 import type { EntityId } from "../value-objects/EntityId";
 
-export interface Sector {
+
+export interface SectorDTO {
   id: EntityId;
   name: string;
 }

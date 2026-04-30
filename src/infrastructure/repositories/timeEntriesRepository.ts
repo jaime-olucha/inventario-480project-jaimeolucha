@@ -1,8 +1,8 @@
-import type { EntityId } from "@/domain/types/EntityId";
+import type { EntityId } from "@/domain/value-objects/EntityId";
 import { httpClient } from "../http/httpClient";
 import type { UserTimeEntriesResponseDTO } from "@/domain/dtos/UserTimeEntriesResponseDTO";
 import { HttpMethod } from "../http/types/HttpMethods";
-import { API_ENDPOINTS } from "./endpoints";
+import { API_ENDPOINTS } from "../http/types/endpoints";
 
 
 

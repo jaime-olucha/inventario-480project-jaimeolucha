@@ -1,7 +1,7 @@
 import { httpClient } from "../http/httpClient";
 import type { User } from "../../domain/dtos/UserDTO";
-import type { EntityId } from "../../domain/types/EntityId";
-import { API_ENDPOINTS } from "./endpoints";
+import type { EntityId } from "../../domain/value-objects/EntityId";
+import { API_ENDPOINTS } from "../http/types/endpoints";
 import { HttpMethod } from "../http/types/HttpMethods";
 import type { UserProjects } from "../../domain/dtos/UserProjectDTO";
 

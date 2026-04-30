@@ -1,16 +1,16 @@
 
 import { useUserStore } from "../../store/user.store";
 import { User, Mail, SquareArrowRightEnter } from 'lucide-react';
-import { SYSTEM_ROLES } from "../../../domain/types/SystemRole";
-import { getUserProjectsApi } from "../../../infrastructure/api/userRepository";
+import { SYSTEM_ROLES } from "../../../domain/value-objects/SystemRole";
+import { getUserProjectsApi } from "../../../infrastructure/repositories/userRepository";
 import { useEffect, useState } from "react";
-import type { UserProjects } from "../../../domain/entities/UserProjects";
+import type { UserProjects } from "../../../domain/dtos/UserProjectDTO";
 import { ROUTES } from "@/ui/routes/routes";
 import './DashboardPage.scss';
 import logoWhite from "../../assets/logo-480/480dev_white.webp";
 import { Link } from "react-router-dom";
 import type { TimeEntry } from "@/domain/entities/TimeEntry";
-import { getUserTimeEntriesApi } from "@/infrastructure/api/timeEntriesRepository";
+import { getUserTimeEntriesApi } from "@/infrastructure/repositories/timeEntriesRepository";
 
 export const DashboardPage = () => {
   const user = useUserStore((store) => store.user);

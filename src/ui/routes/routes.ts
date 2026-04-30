@@ -1,4 +1,4 @@
-import type { EntityId } from "@/domain/types/EntityId";
+import type { EntityId } from "@/domain/value-objects/EntityId";
 
 export const ROUTES = {
   LOGIN: "/login",
