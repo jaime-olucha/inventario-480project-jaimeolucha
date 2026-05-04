@@ -1,6 +1,5 @@
 import type { UserTimeEntry } from "../models/UserTimeEntry";
 import type { UserTimeEntryDTO } from "@/domain/dtos/UserTimeEntriyDTO";
-import { mapProject } from "./mapProject";
 import type { ProjectTimeEntryDTO } from "@/domain/dtos/ProjectTimeEntryDTO";
 import type { ProjectTimeEntry } from "../models/ProjectTimeEntry";
 import type { UserTimeEntriesResponseDTO } from "@/domain/dtos/UserTimeEntriesResponseDTO";
@@ -10,7 +9,8 @@ export const mapUserTimeEntry = (dto: UserTimeEntryDTO): UserTimeEntry => ({
   date: dto.date,
   hours: dto.hour,
   comment: dto.comment,
-  project: mapProject(dto.project)
+  projectId: dto.project.id,
+  projectName: dto.project.name
 });
 
 

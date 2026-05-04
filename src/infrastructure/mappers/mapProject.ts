@@ -4,7 +4,6 @@ import type { ProjectListItemDTO } from "@/domain/dtos/ProjectListItemDTO";
 import type { Project } from "../models/Project";
 import type { ProjectDetail } from "../models/ProjectDetail";
 import type { ProjectListItem } from "../models/ProjectListItem";
-import { mapClient } from "./mapClient";
 import type { ProjectRoleDTO } from "@/domain/dtos/ProjectRoleDTO";
 import type { ProjectRole } from "../models/ProjectRole";
 import type { ProjectUserDTO } from "@/domain/dtos/ProjectUserDTO";
@@ -17,7 +16,8 @@ export const mapProject = (dto: ProjectDTO): Project => ({
   description: dto.description,
   startDate: dto.start_date,
   isActive: dto.is_active,
-  client: mapClient(dto.client),
+  clientId: dto.client.id,
+  clientName: dto.client.name,
 });
 
 export const mapProjectListItem = (dto: ProjectListItemDTO): ProjectListItem => ({

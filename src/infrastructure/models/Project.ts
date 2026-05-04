@@ -1,5 +1,4 @@
 import type { EntityId } from "@/domain/value-objects/EntityId";
-import type { Client } from "./Client";
 
 export interface Project {
   id: EntityId;
@@ -7,6 +6,7 @@ export interface Project {
   description?: string;
   startDate: Date;
   isActive: boolean;
-  client: Client;
+  clientId: EntityId;
+  clientName: string;
 }
 

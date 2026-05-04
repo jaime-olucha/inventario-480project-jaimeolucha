@@ -1,13 +1,13 @@
 
 import type { UserProjectDTO } from "@/domain/dtos/UserProjectDTO";
 import type { UserProject } from "../models/UserProject";
-import { mapClient } from "./mapClient";
 
-export const mapUserProject = (api: UserProjectDTO): UserProject => ({
-  id: api.id,
-  name: api.name,
-  description: api.description,
-  isActive: api.is_active,
-  teamMembers: api.team_members,
-  client: mapClient(api.client),
+export const mapUserProject = (dto: UserProjectDTO): UserProject => ({
+  id: dto.id,
+  name: dto.name,
+  description: dto.description,
+  isActive: dto.is_active,
+  teamMembers: dto.team_members,
+  clientId: dto.client.id,
+  clientName: dto.client.name,
 });

@@ -1,5 +1,4 @@
 import type { EntityId } from "../value-objects/EntityId";
-import type { ClientDTO } from "./ClientDTO";
 
 export interface ProjectDTO {
   id: EntityId;
@@ -7,6 +6,9 @@ export interface ProjectDTO {
   description?: string;
   start_date: Date;
   is_active: boolean;
-  client: ClientDTO;
+  client: {
+    id: EntityId;
+    name: string;
+  }
 }
 

@@ -1,6 +1,7 @@
-import type { Project } from "./Project";
+import type { EntityId } from "@/domain/value-objects/EntityId";
 import type { TimeEntry } from "./TimeEntry";
 
 export interface UserTimeEntry extends TimeEntry {
-  project: Project;
+  projectId: EntityId;
+  projectName: string;
 }

@@ -1,6 +1,9 @@
-import type { ProjectDTO } from "./ProjectDTO";
+import type { EntityId } from "../value-objects/EntityId";
 import type { TimeEntryDTO } from "./TimeEntryDTO";
 
 export interface UserTimeEntryDTO extends TimeEntryDTO {
-  project: ProjectDTO
+  project: {
+    id: EntityId;
+    name: string;
+  };
 }

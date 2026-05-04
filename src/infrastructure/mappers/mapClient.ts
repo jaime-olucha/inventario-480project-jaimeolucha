@@ -7,6 +7,7 @@ import type { Contact } from "../models/Contact";
 import type { ClientProjectDTO } from "@/domain/dtos/ClientProjectDTO";
 import type { ClientProject } from "../models/ClientProject";
 
+
 export const mapSector = (dto: SectorDTO): Sector => ({
   id: dto.id,
   name: dto.name,
@@ -16,7 +17,8 @@ export const mapClient = (dto: ClientDTO): Client => ({
   id: dto.id,
   name: dto.name,
   isActive: dto.is_active,
-  sector: mapSector(dto.sector),
+  sectorId: dto.sector.id,
+  sectorName: dto.sector.name
 });
 
 export const mapContact = (dto: ContactDTO): Contact => ({
