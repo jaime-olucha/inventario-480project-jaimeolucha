@@ -1,8 +1,8 @@
-import type { User } from "../../../domain/entities/User";
+import type { User } from "../../../domain/dtos/UserDTO";
 
 
 export interface UserState {
-    user: User | null;
-    setUser: (user: User) => void
-    clearUser: () => void
+  user: User | null;
+  setUser: (user: User) => void
+  clearUser: () => void
 }

@@ -1,7 +1,7 @@
-import type { User } from "../entities/User";
+import type { UserDTO } from "./UserDTO";
 
 
 export interface LoginResponseDTO {
-    token: string;
-    user: User;
+  token: string;
+  user: UserDTO;
 } 
