@@ -1,14 +1,10 @@
 import type { EntityId } from "../value-objects/EntityId";
-import type { ClientDTO } from "./ClientDTO";
 
-export interface UserProjectDTO {
-  project_user_id: EntityId;
+export interface ClientProjectDTO {
   id: EntityId;
   name: string;
   description?: string;
+  start_date: string
   is_active: boolean;
   team_members: number;
-  client: ClientDTO;
 }
-
-

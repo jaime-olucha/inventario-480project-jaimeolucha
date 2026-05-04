@@ -1,20 +1,20 @@
 
-import { useUserStore } from "../../store/user.store";
-import { User, Mail, SquareArrowRightEnter } from 'lucide-react';
-import { SYSTEM_ROLES } from "../../../domain/value-objects/SystemRole";
-import { getUserProjectsApi } from "../../../infrastructure/repositories/userRepository";
-import { useEffect, useState } from "react";
-import type { UserProjects } from "../../../domain/dtos/UserProjectDTO";
-import { ROUTES } from "@/ui/routes/routes";
-import './DashboardPage.scss';
-import logoWhite from "../../assets/logo-480/480dev_white.webp";
 import { Link } from "react-router-dom";
-import type { TimeEntry } from "@/domain/entities/TimeEntry";
-import { getUserTimeEntriesApi } from "@/infrastructure/repositories/timeEntriesRepository";
+import { SYSTEM_ROLES } from "../../../domain/value-objects/SystemRole";
+import { useUserStore } from "../../store/user.store";
+import { getUserProjectsApi } from "../../../infrastructure/repositories/userRepository";
+import { getUserTimeEntriesApi } from "../../../infrastructure/repositories/userRepository";
+import { useEffect, useState } from "react";
+import type { UserProject } from "@/infrastructure/models/UserProject";
+import type { TimeEntry } from "@/infrastructure/models/TimeEntry";
+import { ROUTES } from "@/ui/routes/routes";
+import { User, Mail, SquareArrowRightEnter } from 'lucide-react';
+import logoWhite from "../../assets/logo-480/480dev_white.webp";
+import './DashboardPage.scss'; 
 
 export const DashboardPage = () => {
   const user = useUserStore((store) => store.user);
-  const [projects, setProjects] = useState<UserProjects[]>([]);
+  const [projects, setProjects] = useState<UserProject[]>([]);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [totalHours, setTotalHours] = useState<number>(0);
 
@@ -25,7 +25,7 @@ export const DashboardPage = () => {
     getUserProjectsApi(user.id).then(setProjects);
     getUserTimeEntriesApi(user.id).then(response => {
       setTimeEntries(response.data)
-      setTotalHours(response.total_hours)
+      setTotalHours(response.totalHours)
     });
 
   }, [user])
@@ -70,7 +70,7 @@ export const DashboardPage = () => {
 
       for (let j = 0; j < week.length; j++) {
         if (entry.date === week[j].dateISO) {
-          week[j].total += entry.hour;
+          week[j].total += entry.hours;
         }
       }
     }
@@ -122,7 +122,7 @@ export const DashboardPage = () => {
                         <div className="project-info">
                           <h2 className="card_header">{project.name}</h2>
                           <p className="info">{project.description}</p>
-                          <p className="info team-members"><User className="iconSvg" />{project.team_members} Miembros</p>
+                          <p className="info team-members"><User className="iconSvg" />{project.teamMembers} Miembros</p>
                           <span className="iconSvg icon-into_project"><SquareArrowRightEnter /></span>
                         </div>
                       </div>

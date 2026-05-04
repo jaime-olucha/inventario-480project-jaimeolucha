@@ -26,5 +26,5 @@ export const mapProjectTimeEntry = (dto: ProjectTimeEntryDTO): ProjectTimeEntry 
 
 export const mapUserTimeEntriesResponse = (dto: UserTimeEntriesResponseDTO) => ({
   totalHours: dto.total_hours,
-  entries: dto.data.map(mapUserTimeEntry),
+  data: dto.data.map(mapUserTimeEntry),
 });

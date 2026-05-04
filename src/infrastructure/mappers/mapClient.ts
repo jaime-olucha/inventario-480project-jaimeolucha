@@ -4,6 +4,8 @@ import type { SectorDTO } from "@/domain/dtos/SectorDTO";
 import type { Sector } from "../models/Sector";
 import type { ContactDTO } from "@/domain/dtos/ContactDTO";
 import type { Contact } from "../models/Contact";
+import type { ClientProjectDTO } from "@/domain/dtos/ClientProjectDTO";
+import type { ClientProject } from "../models/ClientProject";
 
 export const mapSector = (dto: SectorDTO): Sector => ({
   id: dto.id,
@@ -25,4 +27,13 @@ export const mapContact = (dto: ContactDTO): Contact => ({
   isActive: dto.is_active,
   isMain: dto.is_main,
   note: dto.note,
+})
+
+export const mapClientProjects = (dto: ClientProjectDTO): ClientProject => ({
+  id: dto.id,
+  name: dto.name,
+  description: dto.description,
+  startDate: dto.start_date,
+  isActive: dto.is_active,
+  teamMembers: dto.team_members
 })
