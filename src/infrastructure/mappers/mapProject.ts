@@ -1,13 +1,13 @@
-import type { ProjectDetailDTO } from "@/domain/dtos/ProjectDetailDTO";
-import type { ProjectDTO } from "@/domain/dtos/ProjectDTO";
-import type { ProjectListItemDTO } from "@/domain/dtos/ProjectListItemDTO";
-import type { Project } from "../models/Project";
-import type { ProjectDetail } from "../models/ProjectDetail";
-import type { ProjectListItem } from "../models/ProjectListItem";
-import type { ProjectRoleDTO } from "@/domain/dtos/ProjectRoleDTO";
-import type { ProjectRole } from "../models/ProjectRole";
-import type { ProjectUserDTO } from "@/domain/dtos/ProjectUserDTO";
-import type { ProjectUser } from "../models/ProjectUser";
+import type { ProjectDetailDTO } from "@/infrastructure/dtos/Project/ProjectDetailDTO";
+import type { ProjectDTO } from "@/infrastructure/dtos/Project/ProjectDTO";
+import type { ProjectListItemDTO } from "@/infrastructure/dtos/Project/ProjectListItemDTO";
+import type { Project } from "../../domain/models/Project/Project";
+import type { ProjectDetail } from "../../domain/models/Project/ProjectDetail";
+import type { ProjectListItem } from "../../domain/models/Project/ProjectListItem";
+import type { ProjectRoleDTO } from "@/infrastructure/dtos/Project/ProjectRoleDTO";
+import type { ProjectRole } from "../../domain/models/Project/ProjectRole";
+import type { ProjectUserDTO } from "@/infrastructure/dtos/Project/ProjectUserDTO";
+import type { ProjectUser } from "../../domain/models/Project/ProjectUser";
 
 
 export const mapProject = (dto: ProjectDTO): Project => ({

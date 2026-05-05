@@ -1,6 +1,6 @@
 
-import type { UserProjectDTO } from "@/domain/dtos/UserProjectDTO";
-import type { UserProject } from "../models/UserProject";
+import type { UserProjectDTO } from "@/infrastructure/dtos/User/UserProjectDTO";
+import type { UserProject } from "../../domain/models/User/UserProject";
 
 export const mapUserProject = (dto: UserProjectDTO): UserProject => ({
   id: dto.id,

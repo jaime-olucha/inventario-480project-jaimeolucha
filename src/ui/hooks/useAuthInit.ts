@@ -1,14 +1,15 @@
 import { useEffect } from "react"
-import { useAuthStore } from "../store/auth.store"
-import { useUserStore } from "../store/user.store"
+import { useAuthStore } from "../../infrastructure/store/auth.store"
+import { useUserStore } from "../../infrastructure/store/user.store"
 import { jwtDecode } from "jwt-decode"
 import type { JwtPayload } from "./interface/JwtPayload"
-import { getUserByIdApi } from "../../infrastructure/repositories/userRepository"
+import { useRepositories } from "../../infrastructure/RepositoryContext/RepositoryContext"
 
 export const useAuthInit = () => {
   const token = useAuthStore((state) => state.token)
   const logout = useAuthStore((state) => state.logout)
   const setUser = useUserStore((state) => state.setUser)
+  const { user } = useRepositories()
 
   useEffect(() => {
     if (!token) return;
@@ -16,17 +17,14 @@ export const useAuthInit = () => {
     try {
       const decode = jwtDecode<JwtPayload>(token)
 
-      getUserByIdApi(decode.id).then((user) => {
-        setUser(user);
-
+      user.getById(decode.id).then((u) => {
+        setUser(u);
       }).catch(() => {
         logout();
       })
 
-
-
-    } catch (error) {
+    } catch {
       logout()
     }
-  }), [token, logout, setUser]
+  }, [token, logout, setUser, user])
 }

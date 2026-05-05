@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand */
+  --color-primary: var(--primary);
+  --color-text-secondary: var(--text-secondary);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar-bg);
+  --color-sidebar-foreground: var(--sidebar-text);
+  --color-sidebar-primary: var(--primary);
+  --color-sidebar-primary-foreground: #000000;
+  --color-sidebar-accent: var(--sidebar-hover-bg);
+  --color-sidebar-accent-foreground: var(--sidebar-hover-text);
+  --color-sidebar-border: var(--sidebar-border-color);
+  --color-sidebar-ring: var(--primary);
+
+  /* Base */
+  --color-background: #ffffff;
+}

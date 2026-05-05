@@ -1,32 +1,45 @@
-import { Navigate, Route, Routes } from "react-router-dom"
-import { LoginPage } from "../pages/LoginPage/LoginPage"
-import { DashboardPage } from "../pages/DashboardPage/DashboardPage"
-import { useAuthStore } from "../store/auth.store"
-import { AppLayout } from "../layouts/AppLayout"
-
+import { Navigate, Route, Routes } from "react-router-dom";
+import { useAuthStore } from "../../infrastructure/store/auth.store";
+import { AppLayout } from "../layouts/AppLayout";
+import { ROUTES } from "./routes";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { SIDEBAR_ITEMS } from "../components/sidebar/sidebarConfig";
+import { LoginPage } from "../pages/LoginPage/LoginPage";
 
 export const AppRoutes = () => {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   return (
     <Routes>
       <Route
-        path="/login"
-        element={
-          isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
-        }
+        path={ROUTES.LOGIN}
+        element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} replace /> : <LoginPage />}
       />
 
       <Route
-        path="/"
-        element={
-          isAuthenticated ? <AppLayout /> : <Navigate to="/login" replace />
-        }
+        path={ROUTES.DASHBOARD}
+        element={isAuthenticated ? <AppLayout /> : <Navigate to={ROUTES.LOGIN} replace />}
       >
-        <Route index element={<DashboardPage />} />
-      </Route>
-    </Routes>
-  )
+        {SIDEBAR_ITEMS.map(({ path, roles, page: Page }) => (
+          <Route
+            key={path}
+            index={path === ROUTES.DASHBOARD}
+            path={path !== ROUTES.DASHBOARD ? path : undefined}
+            element={
+              <ProtectedRoute allowedRoles={roles}>
+                <Page />
+              </ProtectedRoute>
+            }
+          />
+        ))}
 
-}
+        <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+      </Route>
+
+      <Route
+        path="*"
+        element={<Navigate to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN} replace />}
+      />
+    </Routes>
+  );
+};

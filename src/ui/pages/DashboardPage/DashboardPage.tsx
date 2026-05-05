@@ -1,89 +1,41 @@
 
 import { Link } from "react-router-dom";
-import { SYSTEM_ROLES } from "../../../domain/value-objects/SystemRole";
-import { useUserStore } from "../../store/user.store";
-import { getUserProjectsApi } from "../../../infrastructure/repositories/userRepository";
-import { getUserTimeEntriesApi } from "../../../infrastructure/repositories/userRepository";
+import { useUserStore } from "../../../infrastructure/store/user.store";
+import { useRepositories } from "../../../infrastructure/RepositoryContext/RepositoryContext";
 import { useEffect, useState } from "react";
-import type { UserProject } from "@/infrastructure/models/UserProject";
-import type { TimeEntry } from "@/infrastructure/models/TimeEntry";
+import type { UserProject } from "@/domain/models/User/UserProject";
+import type { TimeEntry } from "@/domain/models/User/TimeEntry";
+import { getInitials } from "@/infrastructure/helpers/getInitials";
+import { getWeeklyHours } from "@/infrastructure/helpers/getWeeklyHours";
+import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
 import { ROUTES } from "@/ui/routes/routes";
 import { User, Mail, SquareArrowRightEnter } from 'lucide-react';
-import logoWhite from "../../assets/logo-480/480dev_white.webp";
-import './DashboardPage.scss'; 
+import './DashboardPage.scss';
 
 export const DashboardPage = () => {
   const user = useUserStore((store) => store.user);
+  const { user: userRepo } = useRepositories();
   const [projects, setProjects] = useState<UserProject[]>([]);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
-  const [totalHours, setTotalHours] = useState<number>(0);
 
+  const weeklyHours = getWeeklyHours(timeEntries);
+  const totalHours = weeklyHours.reduce((sum, day) => sum + day.total, 0);
+  const initials = getInitials(user?.name) + getInitials(user?.surname);
+  const roleBadge = getRoleBadge(user?.role);
 
   useEffect(() => {
     if (!user) return;
 
-    getUserProjectsApi(user.id).then(setProjects);
-    getUserTimeEntriesApi(user.id).then(response => {
+    userRepo.getProjects(user.id).then(setProjects);
+    userRepo.getTimeEntries(user.id).then(response => {
       setTimeEntries(response.data)
-      setTotalHours(response.totalHours)
     });
 
-  }, [user])
+  }, [user, userRepo])
 
-
-  const getInitials = (name: string = "") => {
-    return name?.[0] ?? "";
-  }
-  const initials = getInitials(user?.name) + getInitials(user?.surname);
-
-  const getRoleBadge = () => {
-    if (user?.role == SYSTEM_ROLES.ADMIN) return "Administrador"
-  }
-
-  const getWeeklyHours = (entries: TimeEntry[]) => {
-    const days = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
-    const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-
-    const week = [];
-
-    const today = new Date();
-    const currentDay = today.getDay();
-
-    const diffToMonday = currentDay === 0 ? 0 : 1 - currentDay;
-
-    const monday = new Date(today);
-    monday.setDate(today.getDate() + diffToMonday);
-
-    for (let i = 0; i < days.length; i++) {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + i);
-
-      week.push({
-        day: `${days[i]} ${date.getDate()} ${months[date.getMonth()]}`,
-        dateISO: date.toISOString().split("T")[0],
-        total: 0,
-      });
-    }
-
-    for (let i = 0; i < entries.length; i++) {
-      const entry = entries[i];
-
-      for (let j = 0; j < week.length; j++) {
-        if (entry.date === week[j].dateISO) {
-          week[j].total += entry.hours;
-        }
-      }
-    }
-
-    return week;
-  };
-  const weeklyHours = getWeeklyHours(timeEntries);
 
   return (
     <section className="dashboard-page">
-      <div className="aside">
-        <img src={logoWhite} alt="Logo 480DEV" />
-      </div>
       <div className="content">
         <div className="dashboard-page_header">
           <h1>¡Bienvenid@, {user?.name}!</h1>
@@ -99,7 +51,7 @@ export const DashboardPage = () => {
             <p><User className="iconSvg" /><strong>Name:</strong> {user?.name} {user?.surname}</p>
             <p><Mail className="iconSvg" /><strong>Correo:</strong> {user?.email}</p>
           </div>
-          {getRoleBadge() && <span className="card_badge">{getRoleBadge()}</span>}
+          {roleBadge && <span className="card_badge">{roleBadge}</span>}
         </article>
 
         <article className="card">

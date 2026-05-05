@@ -1,8 +1,8 @@
-import type { UserTimeEntry } from "../models/UserTimeEntry";
-import type { UserTimeEntryDTO } from "@/domain/dtos/UserTimeEntriyDTO";
-import type { ProjectTimeEntryDTO } from "@/domain/dtos/ProjectTimeEntryDTO";
-import type { ProjectTimeEntry } from "../models/ProjectTimeEntry";
-import type { UserTimeEntriesResponseDTO } from "@/domain/dtos/UserTimeEntriesResponseDTO";
+import type { UserTimeEntry } from "../../domain/models/User/UserTimeEntry";
+import type { UserTimeEntryDTO } from "@/infrastructure/dtos/User/UserTimeEntriyDTO";
+import type { ProjectTimeEntryDTO } from "@/infrastructure/dtos/Project/ProjectTimeEntryDTO";
+import type { ProjectTimeEntry } from "../../domain/models/Project/ProjectTimeEntry";
+import type { UserTimeEntriesResponseDTO } from "@/infrastructure/dtos/User/UserTimeEntriesResponseDTO";
 
 export const mapUserTimeEntry = (dto: UserTimeEntryDTO): UserTimeEntry => ({
   id: dto.id,
