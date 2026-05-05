@@ -6,14 +6,16 @@ import type { LoginResponseDTO } from "@/infrastructure/dtos/Login/LoginResponse
 import { httpClient } from "../http/httpClient";
 import { API_ENDPOINTS } from "../http/types/endpoints";
 import { HttpMethod } from "../http/types/HttpMethods";
+import { mapLoginResponse } from "../mappers/mapLogin";
 
 export class ApiAuthRepository implements AuthRepository {
   async login(data: LoginRequest): Promise<LoginResponse> {
-    return httpClient<LoginResponseDTO, LoginRequestDTO>({
+    const dto = await httpClient<LoginResponseDTO, LoginRequestDTO>({
       method: HttpMethod.POST,
       path: API_ENDPOINTS.AUTH.LOGIN,
       body: data,
     });
+    return mapLoginResponse(dto);
   }
 
   async logout(): Promise<void> {

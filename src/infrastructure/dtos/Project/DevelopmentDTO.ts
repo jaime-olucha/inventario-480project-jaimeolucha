@@ -1,5 +1,5 @@
 import type { EntityId } from "../value-objects/EntityId";
-import type { LinkDTO } from "./Client/LinkDTO";
+import type { LinkDTO } from "./LinkDTO";
 import type { TechnologyDTO } from "./Project/TechnologyDTO";
 
 

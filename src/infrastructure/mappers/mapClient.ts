@@ -2,7 +2,7 @@ import type { ClientDTO } from "@/infrastructure/dtos/Client/ClientDTO";
 import type { Client } from "../../domain/models/Client/Client";
 import type { SectorDTO } from "@/infrastructure/dtos/Client/SectorDTO";
 import type { Sector } from "../../domain/models/Client/Sector";
-import type { ContactDTO } from "@/domain/dtos/ContactDTO";
+import type { ContactDTO } from "@/infrastructure/dtos/Client/ContactDTO";
 import type { Contact } from "../../domain/models/Client/Contact";
 import type { ClientProjectDTO } from "@/infrastructure/dtos/Client/ClientProjectDTO";
 import type { ClientProject } from "../../domain/models/Client/ClientProject";
