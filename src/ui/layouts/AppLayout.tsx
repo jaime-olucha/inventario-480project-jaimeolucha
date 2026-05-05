@@ -15,10 +15,12 @@ import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
 
 export function AppLayout() {
   const [expanded, setExpanded] = useState(true);
-  const user = useUserStore((s) => s.user);
-  const clearUser = useUserStore((s) => s.clearUser);
-  const authLogout = useAuthStore((s) => s.logout);
+
+  const user = useUserStore((store) => store.user);
+  const clearUser = useUserStore((store) => store.clearUser);
+  const authLogout = useAuthStore((store) => store.logout);
   const navigate = useNavigate();
+
   const { auth } = useRepositories();
 
   const initials = getInitials(user?.name) + getInitials(user?.surname);
@@ -43,10 +45,7 @@ export function AppLayout() {
         </button>
 
         <div className="flex items-center justify-center h-20 border-sidebar-border">
-          {expanded
-            ? <img src={logoFull} alt="480DEV" className="h-8" />
-            : <img src={logoIcon} alt="480" className="w-15 p-0 m-0" />
-          }
+          {expanded ? <img src={logoFull} alt="480DEV" className="h-8" /> : <img src={logoIcon} alt="480" className="w-15 p-0 m-0" />}
         </div>
 
         <Link to={ROUTES.USER.BY_ID(user?.id)}
