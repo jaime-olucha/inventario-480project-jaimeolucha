@@ -1,5 +1,5 @@
-import type { UserDTO } from "@/domain/dtos/UserDTO";
-import type { User } from "../models/User";
+import type { UserDTO } from "@/infrastructure/dtos/User/UserDTO";
+import type { User } from "../../domain/models/User/User";
 
 export const mapUser = (dto: UserDTO): User => ({
   id: dto.id,

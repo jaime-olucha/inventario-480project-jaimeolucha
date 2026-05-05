@@ -1,9 +1,9 @@
-import type { LinkDTO } from "@/domain/dtos/LinkDTO"
-import type { Link } from "../models/Link"
-import type { TechnologyDTO } from "@/domain/dtos/TechnologyDTO"
-import type { Technology } from "../models/Technology"
-import type { DevelopmentDTO } from "@/domain/dtos/DevelopmentDTO"
-import type { Development } from "../models/Development"
+import type { LinkDTO } from "@/infrastructure/dtos/Project/LinkDTO"
+import type { Link } from "../../domain/models/Project/Link"
+import type { TechnologyDTO } from "@/infrastructure/dtos/Project/TechnologyDTO"
+import type { DevelopmentDTO } from "@/infrastructure/dtos/Project/DevelopmentDTO"
+import type { Technology } from "../../domain/models/Project/Technology"
+import type { Development } from "../../domain/models/Project/Development"
 
 export const mapLink = (dto: LinkDTO): Link => ({
   id: dto.id,

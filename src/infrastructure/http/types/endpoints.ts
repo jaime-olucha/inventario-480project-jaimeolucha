@@ -3,6 +3,7 @@ import type { EntityId } from "@/domain/value-objects/EntityId";
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: `/login`,
+    LOGOUT: `/logout`,
     MFA: `/mfa`,
   },
 

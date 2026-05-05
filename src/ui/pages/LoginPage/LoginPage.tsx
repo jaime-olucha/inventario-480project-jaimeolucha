@@ -1,15 +1,16 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthStore } from '../../store/auth.store'
+import { useAuthStore } from '../../../infrastructure/store/auth.store'
 import type { LoginFormData } from "./loginSchema";
 import { loginSchema } from "./loginSchema";
-import { loginApi } from "../../../infrastructure/repositories/authRepository";
+import { useRepositories } from "../../../infrastructure/RepositoryContext/RepositoryContext";
 import logoWhite from "../../assets/logo-480/480dev_white.webp";
 import './LoginPage.scss';
 
 
 export const LoginPage = () => {
   const setToken = useAuthStore((state) => state.setToken);
+  const { auth } = useRepositories();
 
   const { register, handleSubmit, formState: { errors, isSubmitting }
   } = useForm<LoginFormData>({
@@ -19,7 +20,7 @@ export const LoginPage = () => {
   const onSubmit = async (data: LoginFormData) => {
 
     try {
-      const response = await loginApi(data);
+      const response = await auth.login(data);
       setToken(response.token);
 
     } catch (error) {

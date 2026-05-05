@@ -1,8 +1,8 @@
-import type { LoginResponseDTO } from "@/domain/dtos/LoginResponseDTO";
-import type { LoginResponse } from "../models/LoginResponse";
+import type { LoginResponseDTO } from "@/infrastructure/dtos/Login/LoginResponseDTO";
+import type { LoginResponse } from "../../domain/models/Login/LoginResponse";
 import { mapUser } from "./mapUser";
-import type { LoginRequestDTO } from "@/domain/dtos/LoginRequestDTO";
-import type { LoginRequest } from "../models/LoginRequest";
+import type { LoginRequestDTO } from "@/infrastructure/dtos/Login/LoginRequestDTO";
+import type { LoginRequest } from "../../domain/models/Login/LoginRequest";
 
 export const mapLoginResponse = (dto: LoginResponseDTO): LoginResponse => ({
   token: dto.token,
