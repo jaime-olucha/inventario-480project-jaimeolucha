@@ -1,4 +1,4 @@
-import type { SectorRepository } from "@/domain/repositories/SectorRepositoy";
+import type { SectorRepository } from "@/domain/repositories/SectorRepository";
 import type { Sector } from "@/domain/models/Client/Sector";
 import type { SectorDTO } from "@/infrastructure/dtos/Client/SectorDTO";
 import { httpClient } from "../http/httpClient";

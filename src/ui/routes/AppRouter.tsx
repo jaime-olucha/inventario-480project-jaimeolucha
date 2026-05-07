@@ -7,7 +7,7 @@ import { SIDEBAR_ITEMS } from "../components/sidebar/sidebarConfig";
 import { LoginPage } from "../pages/LoginPage/LoginPage";
 
 export const AppRoutes = () => {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
 
   return (
     <Routes>
