@@ -9,31 +9,36 @@ import { useEffect, useState } from "react";
 import { CreatePersonalModal } from "./CreatePersonalModal";
 import { FilterSelect } from "../../components/filterSelect/FilterSelect";
 import { usePersonalFilters, STATUS_OPTIONS, ROLE_OPTIONS } from "../../hooks/usePersonalFilters";
+import { usePagination } from "../../hooks/usePagination";
+import { PaginationControls } from "../../components/PaginationControls/PaginationControls";
 import './PersonalPage.scss';
 import { LogoUser } from "@/ui/components/logoUser/LogoUser";
 import { ROUTES } from "@/ui/routes/routes";
+
+const PAGE_LIMIT = 10;
 
 export const PersonalPage = () => {
   const userStore = useUserStore((store) => store.user);
   const { user: userRepo } = useRepositories();
   const [users, setUsers] = useState<User[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
   const { search, setSearch, status, setStatus, role, setRole, filteredUsers } = usePersonalFilters(users);
-
-
-
 
   useEffect(() => {
     if (!userStore) return;
-    userRepo.getAll().then(setUsers);
-
-  }, [userRepo]);
+    userRepo.getAll(page, limit).then(result => {
+      setUsers(result);
+      setIsLast(result.length < limit);
+    });
+  }, [userRepo, page, limit]);
 
   const handleCreateUser = async (data: CreateUserRequest) => {
     await userRepo.createUser(data);
-
-    const users = await userRepo.getAll();
-    setUsers(users);
+    const result = await userRepo.getAll(page, limit);
+    setUsers(result);
+    setIsLast(result.length < limit);
   };
 
   return (
@@ -92,6 +97,8 @@ export const PersonalPage = () => {
           </li>
         ))}
       </ul>
+
+      <PaginationControls page={page} isFirst={isFirst} isLast={isLast} onPrev={goPrev} onNext={goNext} />
     </section>
   );
 };

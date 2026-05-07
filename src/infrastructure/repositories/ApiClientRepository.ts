@@ -13,10 +13,10 @@ import { mapClient, mapClientProjects, mapContact } from "../mappers/mapClient";
 
 export class ApiClientRepository implements ClientRepository {
 
-  async getAll(): Promise<Client[]> {
+  async getAll(page: number, limit: number): Promise<Client[]> {
     const response = await httpClient<ClientDTO[]>({
       method: HttpMethod.GET,
-      path: API_ENDPOINTS.CLIENTS.LIST,
+      path: `${API_ENDPOINTS.CLIENTS.LIST}?page=${page}&limit=${limit}`,
     });
     return response.map(mapClient);
   }

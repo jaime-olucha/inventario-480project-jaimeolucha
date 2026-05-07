@@ -1,0 +1,43 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  &_btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #dfdfdf;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 150ms, border-color 150ms, color 150ms;
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &_icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  &_page {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    min-width: 70px;
+    text-align: center;
+  }
+}

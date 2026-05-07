@@ -17,10 +17,10 @@ import { mapUserTimeEntriesResponse } from "../mappers/mapTimeEntry";
 import { v7 as uuidv7 } from "uuid";
 
 export class ApiUserRepository implements UserRepository {
-  async getAll(): Promise<User[]> {
+  async getAll(page: number, limit: number): Promise<User[]> {
     const response = await httpClient<UserDTO[]>({
       method: HttpMethod.GET,
-      path: API_ENDPOINTS.USERS.LIST,
+      path: `${API_ENDPOINTS.USERS.LIST}?page=${page}&limit=${limit}`,
     });
     return response.map(mapUser);
   }
