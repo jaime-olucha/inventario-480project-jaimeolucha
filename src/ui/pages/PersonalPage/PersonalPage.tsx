@@ -1,13 +1,17 @@
+import { Link } from "react-router-dom";
 import type { User } from "@/domain/models/User/User";
 import type { CreateUserRequest } from "@/domain/models/User/CreateUserRequest";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { useUserStore } from "@/infrastructure/store/user.store";
+import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
 import { ListFilter, Search, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CreatePersonalModal } from "./CreatePersonalModal";
-import { FilterSelect } from "./FilterSelect";
+import { FilterSelect } from "../../components/filterSelect/FilterSelect";
 import { usePersonalFilters, STATUS_OPTIONS, ROLE_OPTIONS } from "../../hooks/usePersonalFilters";
 import './PersonalPage.scss';
+import { LogoUser } from "@/ui/components/logoUser/LogoUser";
+import { ROUTES } from "@/ui/routes/routes";
 
 export const PersonalPage = () => {
   const userStore = useUserStore((store) => store.user);
@@ -16,6 +20,9 @@ export const PersonalPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { search, setSearch, status, setStatus, role, setRole, filteredUsers } = usePersonalFilters(users);
 
+
+
+
   useEffect(() => {
     if (!userStore) return;
     userRepo.getAll().then(setUsers);
@@ -23,8 +30,10 @@ export const PersonalPage = () => {
   }, [userRepo]);
 
   const handleCreateUser = async (data: CreateUserRequest) => {
-    const newUser = await userRepo.createUser(data);
-    setUsers((prev) => [...prev, newUser]);
+    await userRepo.createUser(data);
+
+    const users = await userRepo.getAll();
+    setUsers(users);
   };
 
   return (
@@ -65,6 +74,24 @@ export const PersonalPage = () => {
           Mostrando {filteredUsers.length} de {users.length} persona{users.length !== 1 ? 's' : ''}
         </p>
       </article>
+
+      <ul className="user-list">
+        {filteredUsers.map((user) => (
+          <li className="li-map" key={user.id}>
+            <Link to={ROUTES.USER.BY_ID(user.id)}>
+              <article className="card card_user">
+                <div>
+                  <LogoUser user={user} className="logo-user" />
+                </div>
+                <div className="card-user_info">
+                  <h2 className="card-user_label">{user.name} {user.surname} {getRoleBadge(user.role) && <span className="card_badge">{getRoleBadge(user.role)}</span>}</h2>
+                  <p className="info"><strong>Correo: </strong>{user.email}</p>
+                </div>
+              </article>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 };

@@ -5,12 +5,12 @@ import { useRepositories } from "../../../infrastructure/RepositoryContext/Repos
 import { useEffect, useState } from "react";
 import type { UserProject } from "@/domain/models/User/UserProject";
 import type { TimeEntry } from "@/domain/models/User/TimeEntry";
-import { getInitials } from "@/infrastructure/helpers/getInitials";
 import { getWeeklyHours } from "@/infrastructure/helpers/getWeeklyHours";
 import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
 import { ROUTES } from "@/ui/routes/routes";
 import { User, Mail, SquareArrowRightEnter } from 'lucide-react';
 import './DashboardPage.scss';
+import { LogoUser } from "@/ui/components/logoUser/LogoUser";
 
 export const DashboardPage = () => {
   const userStore = useUserStore((store) => store.user);
@@ -20,7 +20,6 @@ export const DashboardPage = () => {
 
   const weeklyHours = getWeeklyHours(timeEntries);
   const totalHours = weeklyHours.reduce((sum, day) => sum + day.total, 0);
-  const initials = getInitials(userStore?.name) + getInitials(userStore?.surname);
   const roleBadge = getRoleBadge(userStore?.role);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ export const DashboardPage = () => {
       <article className="card profile_card">
         <div className="card_logo">
           <h2 className="card_header">Tu Perfil</h2>
-          <p className="logo-user">{initials}</p>
+          <LogoUser user={userStore} className="logo-user" />
         </div>
         <div className="card-user_info">
           <p><User className="iconSvg" /><strong>Name:</strong> {userStore?.name} {userStore?.surname}</p>

@@ -16,6 +16,6 @@ export const ROUTES = {
 
   USER: {
     LIST: "/user",
-    BY_ID: (id: EntityId) => `/clients/${id}`,
+    BY_ID: (id: EntityId) => `/user/${id}`,
   }
 } as const;

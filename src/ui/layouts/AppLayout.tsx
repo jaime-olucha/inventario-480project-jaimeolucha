@@ -10,8 +10,8 @@ import { useUserStore } from "../../infrastructure/store/user.store";
 import { useAuthStore } from "../../infrastructure/store/auth.store";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { ROUTES } from "../routes/routes";
-import { getInitials } from "@/infrastructure/helpers/getInitials";
 import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
+import { LogoUser } from "../components/logoUser/LogoUser";
 
 export function AppLayout() {
   const [expanded, setExpanded] = useState(true);
@@ -22,8 +22,6 @@ export function AppLayout() {
   const navigate = useNavigate();
 
   const { auth } = useRepositories();
-
-  const initials = getInitials(user?.name) + getInitials(user?.surname);
   const roleBadge = getRoleBadge(user?.role);
 
   async function handleLogout() {
@@ -54,7 +52,7 @@ export function AppLayout() {
           )}
         >
           <div className="h-10 w-10 rounded-full bg-primary flex  items-center justify-center font-bold text-black">
-            {initials}
+            <LogoUser user={user} />
           </div>
 
           {expanded && (
