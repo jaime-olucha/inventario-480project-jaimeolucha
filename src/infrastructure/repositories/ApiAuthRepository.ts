@@ -1,4 +1,4 @@
-import type { AuthRepository } from "@/domain/repositories/AuthRepositoy";
+import type { AuthRepository } from "@/domain/repositories/AuthRepository";
 import type { LoginRequest } from "@/domain/models/Login/LoginRequest";
 import type { LoginResponse } from "@/domain/models/Login/LoginResponse";
 import type { LoginRequestDTO } from "@/infrastructure/dtos/Login/LoginRequestDTO";

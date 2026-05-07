@@ -1,9 +1,11 @@
 import type { UserRepository } from "@/domain/repositories/UserRepository";
 import type { EntityId } from "@/domain/value-objects/EntityId";
 import type { User } from "@/domain/models/User/User";
+import type { CreateUserRequest } from "@/domain/models/User/CreateUserRequest";
 import type { UserProject } from "@/domain/models/User/UserProject";
 import type { UserTimeEntriesResponse } from "@/domain/models/User/UserTimeEntriesResponse";
 import type { UserDTO } from "@/infrastructure/dtos/User/UserDTO";
+import type { CreateUserRequestDTO } from "@/infrastructure/dtos/User/CreateUserRequestDTO";
 import type { UserProjectDTO } from "@/infrastructure/dtos/User/UserProjectDTO";
 import type { UserTimeEntriesResponseDTO } from "@/infrastructure/dtos/User/UserTimeEntriesResponseDTO";
 import { httpClient } from "../http/httpClient";
@@ -12,6 +14,7 @@ import { HttpMethod } from "../http/types/HttpMethods";
 import { mapUser } from "../mappers/mapUser";
 import { mapUserProject } from "../mappers/mapUserProject";
 import { mapUserTimeEntriesResponse } from "../mappers/mapTimeEntry";
+import { v7 as uuidv7 } from "uuid";
 
 export class ApiUserRepository implements UserRepository {
   async getAll(): Promise<User[]> {
@@ -44,5 +47,15 @@ export class ApiUserRepository implements UserRepository {
       path: API_ENDPOINTS.USERS.TIME_ENTRIES(id),
     });
     return mapUserTimeEntriesResponse(response);
+  }
+
+  async createUser(data: CreateUserRequest): Promise<User> {
+    const body: CreateUserRequestDTO = { id: uuidv7(), ...data };
+    const response = await httpClient<UserDTO, CreateUserRequestDTO>({
+      method: HttpMethod.POST,
+      path: API_ENDPOINTS.USERS.CREATE,
+      body,
+    });
+    return mapUser(response);
   }
 }

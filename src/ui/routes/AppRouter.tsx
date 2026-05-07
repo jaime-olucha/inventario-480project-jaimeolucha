@@ -5,9 +5,10 @@ import { ROUTES } from "./routes";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { SIDEBAR_ITEMS } from "../components/sidebar/sidebarConfig";
 import { LoginPage } from "../pages/LoginPage/LoginPage";
+import { UserDetailPage } from "../pages/UserDetailPage/UserDetailPage";
 
 export const AppRoutes = () => {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
 
   return (
     <Routes>
@@ -32,6 +33,8 @@ export const AppRoutes = () => {
             }
           />
         ))}
+
+        <Route path={`${ROUTES.USER.LIST}/:id`} element={<UserDetailPage />} />
 
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       </Route>

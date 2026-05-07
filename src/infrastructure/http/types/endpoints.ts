@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
 
   USERS: {
     LIST: `/users`,
+    CREATE: `/users`,
     BY_ID: (id: EntityId) => `/users/${id}`,
     PROJECTS: (id: EntityId) => `/users/${id}/projects`,
     PASSWORD_CHANGE: (id: EntityId) => `/users/${id}/password_change`,
