@@ -10,6 +10,9 @@ import { httpClient } from "../http/httpClient";
 import { API_ENDPOINTS } from "../http/types/endpoints";
 import { HttpMethod } from "../http/types/HttpMethods";
 import { mapClient, mapClientProjects, mapContact } from "../mappers/mapClient";
+import type { CreateClientRequest } from "@/domain/models/Client/CreateClientRequest";
+import type { CreateClientRequestDTO } from "../dtos/Client/CreateClientRequestDTO";
+import { v7 as uuidv7 } from "uuid";
 
 export class ApiClientRepository implements ClientRepository {
 
@@ -43,5 +46,15 @@ export class ApiClientRepository implements ClientRepository {
       path: API_ENDPOINTS.CLIENTS.CONTACTS(id),
     });
     return response.map(mapContact);
+  }
+
+  async createClient(data: CreateClientRequest): Promise<Client> {
+    const body: CreateClientRequestDTO = { id: uuidv7(), name: data.name, sector_id: data.sectorId, };
+    const response = await httpClient<ClientDTO, CreateClientRequestDTO>({
+      method: HttpMethod.POST,
+      path: API_ENDPOINTS.CLIENTS.CREATE,
+      body,
+    });
+    return mapClient(response);
   }
 }

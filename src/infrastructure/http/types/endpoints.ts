@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
 
   CLIENTS: {
     LIST: `/clients`,
+    CREATE: `/clients`,
     BY_ID: (id: EntityId) => `/clients/${id}`,
     CONTACTS: (id: EntityId) => `/clients/${id}/contacts`,
     PROJECTS: (id: EntityId) => `/clients/${id}/projects`,

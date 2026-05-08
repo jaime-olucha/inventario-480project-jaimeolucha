@@ -1,0 +1,21 @@
+.projects-counter {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--color-text-secondary);
+
+  &__number {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}

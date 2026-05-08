@@ -1,5 +1,6 @@
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import "./FilterSelect.scss";
 
 type Option = { value: string; label: string };
 

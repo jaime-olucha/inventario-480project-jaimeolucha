@@ -4,24 +4,27 @@ import type { CreateUserRequest } from "@/domain/models/User/CreateUserRequest";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { useUserStore } from "@/infrastructure/store/user.store";
 import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
-import { ListFilter, Search, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
+import { ProjectsCounter } from "@/ui/components/molecules/projectsCounter/ProjectsCounter";
 import { useEffect, useState } from "react";
 import { CreatePersonalModal } from "./CreatePersonalModal";
-import { FilterSelect } from "../../components/filterSelect/FilterSelect";
-import { usePersonalFilters, STATUS_OPTIONS, ROLE_OPTIONS } from "../../hooks/usePersonalFilters";
+import { FiltersCard } from "@/ui/components/organisms/filtersCard/FiltersCard";
+import { FilterSelect } from "@/ui/components/molecules/filterSelect/FilterSelect";
+import { usePersonalFilters, ROLE_OPTIONS } from "../../hooks/usePersonalFilters";
 import { usePagination } from "../../hooks/usePagination";
 import { PaginationControls } from "../../components/PaginationControls/PaginationControls";
 import './PersonalPage.scss';
 import { LogoUser } from "@/ui/components/logoUser/LogoUser";
 import { ROUTES } from "@/ui/routes/routes";
 
-const PAGE_LIMIT = 10;
+const PAGE_LIMIT = 20;
 
 export const PersonalPage = () => {
   const userStore = useUserStore((store) => store.user);
   const { user: userRepo } = useRepositories();
   const [users, setUsers] = useState<User[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeProjectCounts, setActiveProjectCounts] = useState<Record<string, number>>({});
 
   const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
   const { search, setSearch, status, setStatus, role, setRole, filteredUsers } = usePersonalFilters(users);
@@ -33,6 +36,19 @@ export const PersonalPage = () => {
       setIsLast(result.length < limit);
     });
   }, [userRepo, page, limit]);
+
+  useEffect(() => {
+    if (users.length === 0) return;
+    users.forEach(user => {
+      userRepo.getProjects(user.id).then(projects => {
+        setActiveProjectCounts(prev => ({
+          ...prev,
+          [String(user.id)]: projects.filter(p => p.isActive).length,
+        }));
+      });
+    });
+  }, [users]);
+
 
   const handleCreateUser = async (data: CreateUserRequest) => {
     await userRepo.createUser(data);
@@ -57,28 +73,24 @@ export const PersonalPage = () => {
         <CreatePersonalModal
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleCreateUser}
-          existingEmails={users.map((u) => u.email)}
+          existingEmails={users.map((user) => user.email)}
         />
       )}
 
-      <article className="card">
-        <h2 className="card_header"><ListFilter className="iconSvg" />Filtros y Búsqueda</h2>
-        <div className="card_filter">
-          <div className="filter_group">
-            <label>Buscar persona</label>
-            <div className="filter_search">
-              <Search className="search_icon" />
-              <input type="text" placeholder="Nombre, correo, departamento..." value={search} onChange={e => setSearch(e.target.value)} />
-            </div>
-          </div>
-          <FilterSelect label="Estado del usuario" value={status} options={STATUS_OPTIONS} onChange={setStatus} />
+      <FiltersCard
+        search={search}
+        onSearchChange={setSearch}
+        status={status}
+        onStatusChange={setStatus}
+        total={users.length}
+        filteredCount={filteredUsers.length}
+        entityLabel="persona"
+        searchLabel="Buscar persona"
+        searchPlaceholder="Nombre o apellido..."
+        extraFilters={
           <FilterSelect label="Tipo de acceso" value={role} options={ROLE_OPTIONS} onChange={setRole} />
-        </div>
-
-        <p className="filter_results">
-          Mostrando {filteredUsers.length} de {users.length} persona{users.length !== 1 ? 's' : ''}
-        </p>
-      </article>
+        }
+      />
 
       <ul className="user-list">
         {filteredUsers.map((user) => (
@@ -92,6 +104,7 @@ export const PersonalPage = () => {
                   <h2 className="card-user_label">{user.name} {user.surname} {getRoleBadge(user.role) && <span className="card_badge">{getRoleBadge(user.role)}</span>}</h2>
                   <p className="info"><strong>Correo: </strong>{user.email}</p>
                 </div>
+                <ProjectsCounter count={activeProjectCounts[user.id] ?? 0} />
               </article>
             </Link>
           </li>

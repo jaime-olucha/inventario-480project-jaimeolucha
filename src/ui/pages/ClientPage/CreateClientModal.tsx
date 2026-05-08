@@ -1,112 +1,72 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { X, UserPlus } from "lucide-react";
-import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
-import type { CreateUserRequest } from "@/domain/models/User/CreateUserRequest";
+import { X, Building2 } from "lucide-react";
+import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
+import type { Sector } from "@/domain/models/Client/Sector";
+import type { CreateClientRequest } from "@/domain/models/Client/CreateClientRequest";
 import "./CreateClientModal.scss";
 
 const schema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
-  surname: z.string().min(1, "Los apellidos son obligatorios"),
-  email: z.email("Email no válido"),
-  password: z.string().min(8, "Mínimo 8 caracteres"),
-  confirmPassword: z.string(),
-  role: z.enum([SYSTEM_ROLES.ADMIN, SYSTEM_ROLES.EMPLOYEE]),
+  sectorId: z.string().min(1, "El sector es obligatorio"),
+});
 
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Las contraseñas no coinciden",
-  path: ["confirmPassword"],
-
-}).transform(({ confirmPassword: _, ...rest }) => rest);
-
-type FormInput = z.input<typeof schema>;
-type FormOutput = z.output<typeof schema>;
+type FormValues = z.infer<typeof schema>;
 
 interface Props {
   onClose: () => void;
-  onSubmit: (data: CreateUserRequest) => Promise<void>;
-  existingEmails: string[];
+  onSubmit: (data: CreateClientRequest) => Promise<void>;
 }
 
-export const CreateClientModal = ({ onClose, onSubmit, existingEmails }: Props) => {
+export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
+  const { sector: sectorRepo } = useRepositories();
+  const [sectors, setSectors] = useState<Sector[]>([]);
 
-  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<FormInput, unknown, FormOutput>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { role: SYSTEM_ROLES.EMPLOYEE },
   });
 
-  const handleCreate = async (data: FormOutput) => {
+  useEffect(() => {
+    sectorRepo.getAll().then(setSectors);
+  }, [sectorRepo]);
 
-    if (existingEmails.includes(data.email)) {
-      setError("email", { message: "Este email ya está en uso" });
-      return;
-    }
-
-
-    try {
-      await onSubmit(data);
-      onClose();
-
-    } catch {
-      setError("email", { message: "Este email ya está en uso" });
-    }
+  const handleCreate = async (data: FormValues) => {
+    await onSubmit({ name: data.name, sectorId: data.sectorId });
+    onClose();
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(event) => event.stopPropagation()}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
         <div className="modal_header">
-          <h2><UserPlus className="iconHeader" /> Nuevo Personal</h2>
+          <h2><Building2 className="iconHeader" /> Nuevo Cliente</h2>
           <button type="button" className="modal_close" onClick={onClose}><X size={20} /></button>
         </div>
 
         <form className="modal_form" onSubmit={handleSubmit(handleCreate)}>
-          <div className="form_row">
-            <div className="form_field">
-              <label htmlFor="name">Nombre</label>
-              <input id="name" type="text" {...register("name")} />
-              {errors.name && <span className="form_error">{errors.name.message}</span>}
-            </div>
-            <div className="form_field">
-              <label htmlFor="surname">Apellidos</label>
-              <input id="surname" type="text" {...register("surname")} />
-              {errors.surname && <span className="form_error">{errors.surname.message}</span>}
-            </div>
+          <div className="form_field">
+            <label htmlFor="name">Nombre del cliente</label>
+            <input id="name" type="text" placeholder="Nombre de la empresa..." {...register("name")} />
+            {errors.name && <span className="form_error">{errors.name.message}</span>}
           </div>
 
           <div className="form_field">
-            <label htmlFor="email">Email</label>
-            <input id="email" type="email" {...register("email")} />
-            {errors.email && <span className="form_error">{errors.email.message}</span>}
-          </div>
-
-          <div className="form_row">
-            <div className="form_field">
-              <label htmlFor="password">Contraseña</label>
-              <input id="password" type="password" {...register("password")} />
-              {errors.password && <span className="form_error">{errors.password.message}</span>}
-            </div>
-            <div className="form_field">
-              <label htmlFor="confirmPassword">Confirmar contraseña</label>
-              <input id="confirmPassword" type="password" {...register("confirmPassword")} />
-              {errors.confirmPassword && <span className="form_error">{errors.confirmPassword.message}</span>}
-            </div>
-          </div>
-
-          <div className="form_field">
-            <label htmlFor="role">Rol</label>
-            <select id="role" {...register("role")}>
-              <option value={SYSTEM_ROLES.EMPLOYEE}>Empleado</option>
-              <option value={SYSTEM_ROLES.ADMIN}>Administrador</option>
+            <label htmlFor="sectorId">Sector</label>
+            <select id="sectorId" {...register("sectorId")}>
+              <option value="">Selecciona un sector...</option>
+              {sectors.map(sector => (
+                <option key={sector.id} value={sector.id}>{sector.name}</option>
+              ))}
             </select>
-            {errors.role && <span className="form_error">{errors.role.message}</span>}
+            {errors.sectorId && <span className="form_error">{errors.sectorId.message}</span>}
           </div>
 
           <div className="modal_actions">
             <button type="button" className="btn_secondary" onClick={onClose}>Cancelar</button>
             <button type="submit" className="btn_primary" disabled={isSubmitting}>
-              {isSubmitting ? "Creando..." : "Crear"}
+              {isSubmitting ? "Creando..." : "Crear cliente"}
             </button>
           </div>
         </form>
