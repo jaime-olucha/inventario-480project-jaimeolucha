@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X, Building2 } from "lucide-react";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
+import { FilterSelect } from "@/ui/components/molecules/filterSelect/FilterSelect";
 import type { Sector } from "@/domain/models/Client/Sector";
 import type { CreateClientRequest } from "@/domain/models/Client/CreateClientRequest";
 import "./CreateClientModal.scss";
@@ -24,7 +25,7 @@ export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
   const { sector: sectorRepo } = useRepositories();
   const [sectors, setSectors] = useState<Sector[]>([]);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
+  const { register, handleSubmit, control, setError, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
@@ -33,9 +34,19 @@ export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
   }, [sectorRepo]);
 
   const handleCreate = async (data: FormValues) => {
-    await onSubmit({ name: data.name, sectorId: data.sectorId });
-    onClose();
+    try {
+      await onSubmit({ name: data.name, sectorId: data.sectorId });
+      onClose();
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('409')) {
+        setError('name', { message: 'Ya existe un cliente con este nombre' });
+      } else {
+        setError('name', { message: 'Error al crear el cliente. Inténtalo de nuevo.' });
+      }
+    }
   };
+
+  const sectorOptions = sectors.map(s => ({ value: String(s.id), label: s.name }));
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -52,16 +63,19 @@ export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
             {errors.name && <span className="form_error">{errors.name.message}</span>}
           </div>
 
-          <div className="form_field">
-            <label htmlFor="sectorId">Sector</label>
-            <select id="sectorId" {...register("sectorId")}>
-              <option value="">Selecciona un sector...</option>
-              {sectors.map(sector => (
-                <option key={sector.id} value={sector.id}>{sector.name}</option>
-              ))}
-            </select>
-            {errors.sectorId && <span className="form_error">{errors.sectorId.message}</span>}
-          </div>
+          <Controller
+            name="sectorId"
+            control={control}
+            render={({ field }) => (
+              <FilterSelect
+                label="Sector"
+                value={field.value ?? ''}
+                options={sectorOptions}
+                onChange={field.onChange}
+              />
+            )}
+          />
+          {errors.sectorId && <span className="form_error">{errors.sectorId.message}</span>}
 
           <div className="modal_actions">
             <button type="button" className="btn_secondary" onClick={onClose}>Cancelar</button>
