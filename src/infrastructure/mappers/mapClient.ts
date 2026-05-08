@@ -18,7 +18,7 @@ export const mapClient = (dto: ClientDTO): Client => ({
   name: dto.name,
   isActive: dto.is_active,
   sectorId: dto.sector.id,
-  sectorName: dto.sector.name
+  sectorName: dto.sector.name,
 });
 
 export const mapContact = (dto: ContactDTO): Contact => ({

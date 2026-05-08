@@ -1,10 +1,6 @@
 .section-page {
   padding: 20px;
 
-  & > * + * {
-    margin-top: 15px;
-  }
-
   h1 {
     font-size: 36px;
     font-weight: bold;
@@ -24,7 +20,7 @@
     font-size: 16px;
   }
 
-  .card-user_label {
+  .card-client_label {
     font-size: 22px;
     position: relative;
   }
@@ -63,27 +59,19 @@
 
   }
 
-  .card_user {
+  .card_client {
     display: flex;
     align-items: center;
     gap: 20px;
   }
 
-
-  /*
-  .card-user_info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-*/
   .card {
     background-color: white;
     padding: 25px;
     border: 1px solid #dfdfdf;
     border-radius: 10px;
 
-    .logo-user {
+    .logo-client {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -106,7 +94,7 @@
     }
   }
 
-  .user-list {
+  .client-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;

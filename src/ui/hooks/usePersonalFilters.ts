@@ -1,12 +1,9 @@
 import type { User } from "@/domain/models/User/User";
 import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
 import { useState } from "react";
+import { useFilters, STATUS_OPTIONS } from "./useFilters";
 
-export const STATUS_OPTIONS = [
-  { value: 'all', label: 'Todos los estados' },
-  { value: 'active', label: 'Solo activos' },
-  { value: 'inactive', label: 'Solo inactivos' },
-] as const;
+export { STATUS_OPTIONS };
 
 export const ROLE_OPTIONS = [
   { value: 'all', label: 'Todos los roles' },
@@ -15,31 +12,18 @@ export const ROLE_OPTIONS = [
 ] as const;
 
 export const usePersonalFilters = (users: User[]) => {
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('active');
   const [role, setRole] = useState('all');
 
-  const filteredUsers = users.filter(user => {
+  const { search, setSearch, status, setStatus, filtered } = useFilters(
+    users,
+    (user, query) => user.surname.toLowerCase().includes(query)
+  );
 
-    const query = search.toLowerCase();
-
-    const matchesSearch =
-      !query ||
-      user.name.toLowerCase().includes(query) ||
-      user.surname.toLowerCase().includes(query);
-
-    const matchesStatus =
-      status === 'all' ||
-      (status === 'active' && user.isActive) ||
-      (status === 'inactive' && !user.isActive);
-
-    const matchesRole =
-      role === 'all' ||
-      (role === SYSTEM_ROLES.EMPLOYEE && user.role !== SYSTEM_ROLES.ADMIN) ||
-      user.role === role;
-
-    return matchesSearch && matchesStatus && matchesRole;
-  });
+  const filteredUsers = filtered.filter(user =>
+    role === 'all' ||
+    (role === SYSTEM_ROLES.EMPLOYEE && user.role !== SYSTEM_ROLES.ADMIN) ||
+    user.role === role
+  );
 
   return { search, setSearch, status, setStatus, role, setRole, filteredUsers };
 };

@@ -1,5 +1,5 @@
 import { ROUTES } from "@/ui/routes/routes";
-import { LayoutDashboard, Folder, Users, Building } from "lucide-react";
+import { LayoutDashboard, Folder, Users, Building2 } from "lucide-react";
 import type { SidebarItem } from "./interface/SidebarItem";
 import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
 
@@ -7,6 +7,8 @@ import { DashboardPage } from "@/ui/pages/DashboardPage/DashboardPage";
 import { PersonalPage } from "@/ui/pages/PersonalPage/PersonalPage";
 import { ClientPage } from "@/ui/pages/ClientPage/ClientPage";
 import { ProjectPage } from "@/ui/pages/ProjectPage/ProjectPage";
+
+
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
@@ -26,7 +28,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
     label: "Clientes",
     path: ROUTES.CLIENTS.LIST,
-    icon: Building,
+    icon: Building2,
     roles: [SYSTEM_ROLES.ADMIN],
     page: ClientPage,
   },
