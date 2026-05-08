@@ -23,7 +23,6 @@ export const ClientPage = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeProjectCounts, setActiveProjectCounts] = useState<Record<string, number>>({});
-
   const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
   const { search, setSearch, status, setStatus, filtered } = useFilters(clients);
 

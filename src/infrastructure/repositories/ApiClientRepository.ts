@@ -48,13 +48,12 @@ export class ApiClientRepository implements ClientRepository {
     return response.map(mapContact);
   }
 
-  async createClient(data: CreateClientRequest): Promise<Client> {
+  async createClient(data: CreateClientRequest): Promise<void> {
     const body: CreateClientRequestDTO = { id: uuidv7(), name: data.name, sector_id: data.sectorId, };
-    const response = await httpClient<ClientDTO, CreateClientRequestDTO>({
+    await httpClient<void, CreateClientRequestDTO>({
       method: HttpMethod.POST,
       path: API_ENDPOINTS.CLIENTS.CREATE,
       body,
     });
-    return mapClient(response);
   }
 }

@@ -9,5 +9,5 @@ export interface ClientRepository {
   getById(id: EntityId): Promise<Client>;
   getProjects(id: EntityId): Promise<ClientProject[]>;
   getContacts(id: EntityId): Promise<Contact[]>;
-  createClient(data: CreateClientRequest): Promise<Client>;
+  createClient(data: CreateClientRequest): Promise<void>;
 }

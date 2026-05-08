@@ -49,13 +49,12 @@ export class ApiUserRepository implements UserRepository {
     return mapUserTimeEntriesResponse(response);
   }
 
-  async createUser(data: CreateUserRequest): Promise<User> {
+  async createUser(data: CreateUserRequest): Promise<void> {
     const body: CreateUserRequestDTO = { id: uuidv7(), ...data };
-    const response = await httpClient<UserDTO, CreateUserRequestDTO>({
+    await httpClient<void, CreateUserRequestDTO>({
       method: HttpMethod.POST,
       path: API_ENDPOINTS.USERS.CREATE,
       body,
     });
-    return mapUser(response);
   }
 }

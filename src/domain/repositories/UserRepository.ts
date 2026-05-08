@@ -9,5 +9,5 @@ export interface UserRepository {
   getById(id: EntityId): Promise<User>;
   getProjects(id: EntityId): Promise<UserProject[]>;
   getTimeEntries(id: EntityId): Promise<UserTimeEntriesResponse>;
-  createUser(data: CreateUserRequest): Promise<User>;
+  createUser(data: CreateUserRequest): Promise<void>;
 }

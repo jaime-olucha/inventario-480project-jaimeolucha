@@ -24,8 +24,9 @@ interface Props {
 export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
   const { sector: sectorRepo } = useRepositories();
   const [sectors, setSectors] = useState<Sector[]>([]);
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const { register, handleSubmit, control, setError, formState: { errors, isSubmitting } } = useForm<FormValues>({
+  const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
@@ -34,14 +35,15 @@ export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
   }, [sectorRepo]);
 
   const handleCreate = async (data: FormValues) => {
+    setServerError(null);
     try {
       await onSubmit({ name: data.name, sectorId: data.sectorId });
       onClose();
     } catch (error) {
       if (error instanceof Error && error.message.includes('409')) {
-        setError('name', { message: 'Ya existe un cliente con este nombre' });
+        setServerError('Ya existe un cliente con este nombre.');
       } else {
-        setError('name', { message: 'Error al crear el cliente. Inténtalo de nuevo.' });
+        setServerError('Error al crear el cliente. Inténtalo de nuevo.');
       }
     }
   };
@@ -50,13 +52,15 @@ export const CreateClientModal = ({ onClose, onSubmit }: Props) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
+      <div className="modal" onClick={event => event.stopPropagation()}>
         <div className="modal_header">
           <h2><Building2 className="iconHeader" /> Nuevo Cliente</h2>
           <button type="button" className="modal_close" onClick={onClose}><X size={20} /></button>
         </div>
 
         <form className="modal_form" onSubmit={handleSubmit(handleCreate)}>
+          {serverError && <p className="form_server_error">{serverError}</p>}
+
           <div className="form_field">
             <label htmlFor="name">Nombre del cliente</label>
             <input id="name" type="text" placeholder="Nombre de la empresa..." {...register("name")} />

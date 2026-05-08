@@ -5,10 +5,12 @@
   border-radius: 10px;
   transition: padding 250ms ease;
 
+
   &--scrolled {
-    padding-top: 0px;
+    padding-top: 10px;
     padding-bottom: 5px;
-    box-shadow: 0 10px 20px #dfdfdf;
+    box-shadow: 0 -50px 50px #d3d2d2;
+
   }
 
   &__header {

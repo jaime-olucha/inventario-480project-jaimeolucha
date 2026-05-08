@@ -53,23 +53,26 @@ export const FiltersCard = ({
     const measure = () => {
       if (!cardRef.current) return;
       const parentRect = parent.getBoundingClientRect();
-      const cardRect = cardRef.current.getBoundingClientRect();
-      const pt = parseFloat(getComputedStyle(parent).paddingTop);
-      setFixedTop(parentRect.top + pt);
-      setFixedLeft(cardRect.left);
-      setFixedWidth(cardRect.width);
+      const style = getComputedStyle(parent);
+      const pl = parseFloat(style.paddingLeft);
+      const pr = parseFloat(style.paddingRight);
+      setFixedTop(parentRect.top);
+      setFixedLeft(parentRect.left + pl);
+      setFixedWidth(parent.clientWidth - pl - pr);
       setNaturalHeight(cardRef.current.offsetHeight);
     };
 
     measure();
-    window.addEventListener('resize', measure);
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(parent);
 
     const handleScroll = () => setScrolled(parent.scrollTop > 80);
     parent.addEventListener('scroll', handleScroll);
 
     return () => {
       parent.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', measure);
+      ro.disconnect();
     };
   }, []);
 

@@ -99,6 +99,15 @@
     }
   }
 
+  .form_server_error {
+    font-size: 13px;
+    color: #e53e3e;
+    background-color: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
   .modal_actions {
     display: flex;
     justify-content: flex-end;
