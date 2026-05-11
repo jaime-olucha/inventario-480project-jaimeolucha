@@ -1,7 +1,6 @@
-import type { EntityId } from "../value-objects/EntityId";
+import type { EntityId } from "@/domain/value-objects/EntityId";
 import type { LinkDTO } from "./LinkDTO";
-import type { TechnologyDTO } from "./Project/TechnologyDTO";
-
+import type { TechnologyDTO } from "./TechnologyDTO";
 
 export interface DevelopmentDTO {
   id: EntityId;
