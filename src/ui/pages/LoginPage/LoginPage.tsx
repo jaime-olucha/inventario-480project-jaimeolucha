@@ -9,7 +9,7 @@ import './LoginPage.scss';
 
 
 export const LoginPage = () => {
-  const setToken = useAuthStore((state) => state.setToken);
+  const setTokens = useAuthStore((state) => state.setTokens);
   const { auth } = useRepositories();
 
   const { register, handleSubmit, formState: { errors, isSubmitting }
@@ -21,7 +21,7 @@ export const LoginPage = () => {
 
     try {
       const response = await auth.login(data);
-      setToken(response.token);
+      setTokens(response.token, response.refreshToken);
 
     } catch (error) {
 
