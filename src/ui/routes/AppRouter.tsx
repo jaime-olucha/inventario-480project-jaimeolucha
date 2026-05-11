@@ -5,7 +5,7 @@ import { ROUTES } from "./routes";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { SIDEBAR_ITEMS } from "../components/sidebar/sidebarConfig";
 import { LoginPage } from "../pages/LoginPage/LoginPage";
-import { UserDetailPage } from "../pages/UserDetailPage/UserDetailPage";
+import { PersonalDetailPage } from "../pages/Personal/PersonalDetailPage/PersonalDetailPage";
 
 export const AppRoutes = () => {
   const isAuthenticated = useAuthStore((store) => store.isAuthenticated);
@@ -34,7 +34,9 @@ export const AppRoutes = () => {
           />
         ))}
 
-        <Route path={`${ROUTES.USER.LIST}/:id`} element={<UserDetailPage />} />
+        <Route path={`${ROUTES.USER.LIST}/:id`} element={<PersonalDetailPage />} />
+        <Route path={`${ROUTES.CLIENTS.LIST}/:id`} element={<PersonalDetailPage />} />
+        <Route path={`${ROUTES.PROJECTS.LIST}/:id`} element={<PersonalDetailPage />} />
 
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       </Route>
