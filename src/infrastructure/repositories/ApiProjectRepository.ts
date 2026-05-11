@@ -16,13 +16,24 @@ import { HttpMethod } from "../http/types/HttpMethods";
 import { mapProjectListItem, mapProjectDetail, mapProjectUser } from "../mappers/mapProject";
 import { mapDevelopment } from "../mappers/mapDevelopment";
 import { mapProjectTimeEntry } from "../mappers/mapTimeEntry";
+import type { CreateProjectRequest } from "@/domain/models/Project/CreateProjectRequest";
+import type { CreateProjectRequestDTO } from "../dtos/Project/CreateProjectRequestDTO";
+import { v7 as uuidv7 } from "uuid";
 
 export class ApiProjectRepository implements ProjectRepository {
-
-  async getAll(): Promise<ProjectListItem[]> {
+  /*
+    async getAll(): Promise<ProjectListItem[]> {
+      const response = await httpClient<ProjectListItemDTO[]>({
+        method: HttpMethod.GET,
+        path: `${API_ENDPOINTS.PROJECTS.LIST}`,
+      });
+      return response.map(mapProjectListItem);
+    }
+  */
+  async getAll(page: number, limit: number): Promise<ProjectListItem[]> {
     const response = await httpClient<ProjectListItemDTO[]>({
       method: HttpMethod.GET,
-      path: API_ENDPOINTS.PROJECTS.LIST,
+      path: `${API_ENDPOINTS.PROJECTS.LIST}?page=${page}&limit=${limit}`,
     });
     return response.map(mapProjectListItem);
   }
@@ -65,5 +76,20 @@ export class ApiProjectRepository implements ProjectRepository {
       path: API_ENDPOINTS.PROJECTS.TIME_ENTRY_BY_ID(projectId, entryId),
     });
     return mapProjectTimeEntry(response);
+  }
+
+  async createProject(data: CreateProjectRequest): Promise<void> {
+    const body: CreateProjectRequestDTO = {
+      id: uuidv7(),
+      name: data.name,
+      description: data.description,
+      start_date: data.startDate || null,
+      client_id: data.clientId
+    };
+    await httpClient<void, CreateProjectRequestDTO>({
+      method: HttpMethod.POST,
+      path: API_ENDPOINTS.PROJECTS.CREATE,
+      body,
+    });
   }
 }

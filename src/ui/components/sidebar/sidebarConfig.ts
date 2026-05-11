@@ -4,9 +4,9 @@ import type { SidebarItem } from "./interface/SidebarItem";
 import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
 
 import { DashboardPage } from "@/ui/pages/DashboardPage/DashboardPage";
-import { PersonalPage } from "@/ui/pages/PersonalPage/PersonalPage";
-import { ClientPage } from "@/ui/pages/ClientPage/ClientPage";
-import { ProjectPage } from "@/ui/pages/ProjectPage/ProjectPage";
+import { PersonalPage } from "@/ui/pages/Personal/PersonalPage/PersonalPage";
+import { ClientPage } from "@/ui/pages/Client/ClientPage/ClientPage";
+import { ProjectPage } from "@/ui/pages/Project/ProjectPage/ProjectPage";
 
 
 

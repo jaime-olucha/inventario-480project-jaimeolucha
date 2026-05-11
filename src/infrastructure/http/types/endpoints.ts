@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
     LOGIN: `/login`,
     LOGOUT: `/logout`,
     MFA: `/mfa`,
+    REFRESH: `/refresh`,
   },
 
   USERS: {
@@ -37,6 +38,7 @@ export const API_ENDPOINTS = {
 
   PROJECTS: {
     LIST: `/projects`,
+    CREATE: `/projects`,
     BY_ID: (id: EntityId) => `/projects/${id}`,
     USERS: (id: EntityId) => `/projects/${id}/users`,
     DEVELOPMENTS: (id: EntityId) => `/projects/${id}/developments`,

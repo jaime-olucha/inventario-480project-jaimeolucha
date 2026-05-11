@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ListFilter, Search } from "lucide-react";
 import { FilterSelect } from "@/ui/components/molecules/filterSelect/FilterSelect";
 import { STATUS_OPTIONS } from "@/ui/hooks/useFilters";
@@ -15,6 +15,7 @@ interface FiltersCardProps {
   searchLabel?: string;
   searchPlaceholder?: string;
   extraFilters?: React.ReactNode;
+  headerAction?: React.ReactNode;
 }
 
 function getScrollParent(el: HTMLElement): HTMLElement {
@@ -38,89 +39,55 @@ export const FiltersCard = ({
   searchLabel = "Buscar",
   searchPlaceholder = "Escribe para filtrar...",
   extraFilters,
+  headerAction,
 }: FiltersCardProps) => {
   const cardRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [fixedTop, setFixedTop] = useState(0);
-  const [fixedLeft, setFixedLeft] = useState(0);
-  const [fixedWidth, setFixedWidth] = useState(0);
-  const [naturalHeight, setNaturalHeight] = useState(0);
 
   useEffect(() => {
     if (!cardRef.current) return;
     const parent = getScrollParent(cardRef.current);
-
-    const measure = () => {
-      if (!cardRef.current) return;
-      const parentRect = parent.getBoundingClientRect();
-      const style = getComputedStyle(parent);
-      const pl = parseFloat(style.paddingLeft);
-      const pr = parseFloat(style.paddingRight);
-      setFixedTop(parentRect.top);
-      setFixedLeft(parentRect.left + pl);
-      setFixedWidth(parent.clientWidth - pl - pr);
-      setNaturalHeight(cardRef.current.offsetHeight);
-    };
-
-    measure();
-
-    const ro = new ResizeObserver(measure);
-    ro.observe(parent);
-
     const handleScroll = () => setScrolled(parent.scrollTop > 80);
     parent.addEventListener('scroll', handleScroll);
-
-    return () => {
-      parent.removeEventListener('scroll', handleScroll);
-      ro.disconnect();
-    };
+    return () => parent.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const fixedStyle: CSSProperties | undefined = scrolled ? {
-    position: 'fixed',
-    top: fixedTop,
-    left: fixedLeft,
-    width: fixedWidth,
-    zIndex: 1000,
-  } : undefined;
-
   return (
-    <>
-      {scrolled && <div style={{ height: naturalHeight }} />}
-      <article
-        ref={cardRef}
-        className={`filters-card${scrolled ? ' filters-card--scrolled' : ''}`}
-        style={fixedStyle}
-      >
+    <article
+      ref={cardRef}
+      className={`filters-card${scrolled ? ' filters-card--scrolled' : ''}`}
+    >
+      <div className="filters-card__top">
         <h2 className="filters-card__header">
           <ListFilter className="filters-card__icon" />
           Filtros y Búsqueda
         </h2>
-        <div className="filters-card__grid">
-          <div className="filter_group">
-            <label>{searchLabel}</label>
-            <div className="filter_search">
-              <Search className="search_icon" />
-              <input
-                type="text"
-                placeholder={searchPlaceholder}
-                value={search}
-                onChange={e => onSearchChange(e.target.value)}
-              />
-            </div>
+        {headerAction && <div className="filters-card__action">{headerAction}</div>}
+      </div>
+      <div className="filters-card__grid">
+        <div className="filter_group">
+          <label>{searchLabel}</label>
+          <div className="filter_search">
+            <Search className="search_icon" />
+            <input
+              type="text"
+              placeholder={searchPlaceholder}
+              value={search}
+              onChange={e => onSearchChange(e.target.value)}
+            />
           </div>
-          <FilterSelect
-            label="Estado"
-            value={status}
-            options={STATUS_OPTIONS}
-            onChange={onStatusChange}
-          />
-          {extraFilters}
         </div>
-        <p className="filters-card__results">
-          Mostrando {filteredCount} de {total} {entityLabel}{total !== 1 ? 's' : ''}
-        </p>
-      </article>
-    </>
+        <FilterSelect
+          label="Estado"
+          value={status}
+          options={STATUS_OPTIONS}
+          onChange={onStatusChange}
+        />
+        {extraFilters}
+      </div>
+      <p className="filters-card__results">
+        Mostrando {filteredCount} de {total} {entityLabel}{total !== 1 ? 's' : ''}
+      </p>
+    </article>
   );
 };

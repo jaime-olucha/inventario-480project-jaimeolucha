@@ -3,10 +3,10 @@ import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryCo
 import { useUserStore } from "@/infrastructure/store/user.store";
 import { Plus } from "lucide-react";
 import { ProjectsCounter } from "@/ui/components/molecules/projectsCounter/ProjectsCounter";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiltersCard } from "@/ui/components/organisms/filtersCard/FiltersCard";
-import { usePagination } from "../../hooks/usePagination";
-import { PaginationControls } from "../../components/PaginationControls/PaginationControls";
+import { usePagination } from "../../../hooks/usePagination";
+import { PaginationControls } from "../../../components/PaginationControls/PaginationControls";
 import './ClientPage.scss';
 import { LogoUser } from "@/ui/components/logoUser/LogoUser";
 import { ROUTES } from "@/ui/routes/routes";
@@ -23,6 +23,8 @@ export const ClientPage = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeProjectCounts, setActiveProjectCounts] = useState<Record<string, number>>({});
+  const [showFab, setShowFab] = useState(false);
+  const addBtnRef = useRef<HTMLButtonElement>(null);
   const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
   const { search, setSearch, status, setStatus, filtered } = useFilters(clients);
 
@@ -47,6 +49,17 @@ export const ClientPage = () => {
   }, [clients]);
 
 
+  useEffect(() => {
+    const btn = addBtnRef.current;
+    if (!btn) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowFab(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(btn);
+    return () => observer.disconnect();
+  }, []);
+
   const handleCreateClient = async (data: CreateClientRequest) => {
     await clientRepo.createClient(data);
     const result = await clientRepo.getAll(page, limit);
@@ -61,7 +74,7 @@ export const ClientPage = () => {
           <h1>Clientes</h1>
           <p className="info">Gestiona los clientes de la empresa</p>
         </div>
-        <button className="add_record" onClick={() => setIsModalOpen(true)}>
+        <button ref={addBtnRef} className="add_record" onClick={() => setIsModalOpen(true)}>
           <Plus className="iconBtn" /> Nuevo Cliente
         </button>
       </div>
@@ -89,7 +102,7 @@ export const ClientPage = () => {
       <ul className="user-list">
         {filtered.map((client) => (
           <li className="li-map" key={client.id}>
-            <Link to={ROUTES.USER.BY_ID(client.id)}>
+            <Link to={ROUTES.CLIENTS.BY_ID(client.id)}>
               <article className="card card_user">
                 <div>
                   <LogoUser user={client} className="logo-user" />
@@ -106,6 +119,12 @@ export const ClientPage = () => {
       </ul>
 
       <PaginationControls page={page} isFirst={isFirst} isLast={isLast} onPrev={goPrev} onNext={goNext} />
+
+      {showFab && (
+        <button className="add_record add_record--fab" onClick={() => setIsModalOpen(true)}>
+          <Plus className="iconBtn" />
+        </button>
+      )}
     </section>
   );
 };

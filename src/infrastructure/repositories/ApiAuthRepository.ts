@@ -7,6 +7,7 @@ import { httpClient } from "../http/httpClient";
 import { API_ENDPOINTS } from "../http/types/endpoints";
 import { HttpMethod } from "../http/types/HttpMethods";
 import { mapLoginResponse } from "../mappers/mapLogin";
+import { useAuthStore } from "../store/auth.store";
 
 export class ApiAuthRepository implements AuthRepository {
   async login(data: LoginRequest): Promise<LoginResponse> {
@@ -19,9 +20,11 @@ export class ApiAuthRepository implements AuthRepository {
   }
 
   async logout(): Promise<void> {
-    return httpClient<void>({
+    const refreshToken = useAuthStore.getState().refreshToken;
+    return httpClient<void, { refresh_token: string }>({
       method: HttpMethod.POST,
       path: API_ENDPOINTS.AUTH.LOGOUT,
+      body: { refresh_token: refreshToken ?? '' },
     });
   }
 }

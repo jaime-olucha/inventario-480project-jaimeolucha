@@ -1,0 +1,117 @@
+import { Link } from "react-router-dom";
+import type { ProjectListItem } from "@/domain/models/Project/ProjectListItem";
+import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
+import { useUserStore } from "@/infrastructure/store/user.store";
+import { FolderPlus, User as UserIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CreateProjectModal } from "./CreateProjectModal";
+import { FiltersCard } from "@/ui/components/organisms/filtersCard/FiltersCard";
+import { usePagination } from "../../../hooks/usePagination";
+import { PaginationControls } from "../../../components/PaginationControls/PaginationControls";
+import './ProjectPage.scss';
+import { ROUTES } from "@/ui/routes/routes";
+import { useFilters } from "@/ui/hooks/useFilters";
+import type { CreateProjectRequest } from "@/domain/models/Project/CreateProjectRequest";
+import { getActiveBadge } from "@/infrastructure/helpers/getActveBadge";
+
+const PAGE_LIMIT = 20;
+
+export const ProjectPage = () => {
+  const userStore = useUserStore((store) => store.user);
+  const { project: projectRepo } = useRepositories();
+  const [projects, setProjects] = useState<ProjectListItem[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showFab, setShowFab] = useState(false);
+  const addBtnRef = useRef<HTMLButtonElement>(null);
+
+  const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
+  const { search, setSearch, status, setStatus, filtered } = useFilters(projects);
+
+  useEffect(() => {
+    if (!userStore) return;
+    projectRepo.getAll(page, limit).then(result => {
+      setProjects(result);
+      setIsLast(result.length < limit);
+    });
+  }, [projectRepo, page, limit]);
+
+  useEffect(() => {
+    const btn = addBtnRef.current;
+    if (!btn) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowFab(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(btn);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleCreateProject = async (data: CreateProjectRequest) => {
+    await projectRepo.createProject(data);
+    const result = await projectRepo.getAll(page, limit);
+    setProjects(result);
+    setIsLast(result.length < limit);
+  };
+
+  return (
+    <section className="section-page">
+      <div className="section-page_header">
+        <div className="header_title">
+          <h1>Proyectos</h1>
+          <p className="info">Todos los proyectos de la empresa</p>
+        </div>
+        <button ref={addBtnRef} className="add_record" onClick={() => setIsModalOpen(true)}>
+          <FolderPlus className="iconBtn" /> Nuevo Proyecto
+        </button>
+      </div>
+
+      {isModalOpen && (
+        <CreateProjectModal
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleCreateProject}
+        />
+      )}
+
+      <FiltersCard
+        search={search}
+        onSearchChange={setSearch}
+        status={status}
+        onStatusChange={setStatus}
+        total={projects.length}
+        filteredCount={filtered.length}
+        entityLabel="proyecto"
+        searchLabel="Buscar proyecto"
+        searchPlaceholder="Nombre del proyecto..."
+      />
+
+      <ul className="project-list">
+        {filtered.map((project) => (
+          <li className="li-map" key={project.id}>
+            <Link to={ROUTES.PROJECTS.BY_ID(project.id)}>
+              <article className={`card card_project ${!project.isActive ? 'project_disabled' : ''}`}>
+                <div className="card-project_info">
+                  <h2 className="card-project_label">
+                    {project.name}
+                    <span className={`card_badge ${project.isActive ? 'badge-active' : 'badge-inactive'}`}>{getActiveBadge(project.isActive)}</span>
+                  </h2>
+                  <p className="project_description info">{project.description}</p>
+                  <p className="info info-client">Cliente:</p>
+                  <h3>{project.clientName}</h3>
+                  <p className="info team-members"><UserIcon className="iconSvg" />{project.teamMembers} Miembros</p>
+                </div>
+              </article>
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      <PaginationControls page={page} isFirst={isFirst} isLast={isLast} onPrev={goPrev} onNext={goNext} />
+
+      {showFab && (
+        <button className="add_record add_record--fab" onClick={() => setIsModalOpen(true)}>
+          <FolderPlus className="iconBtn" />
+        </button>
+      )}
+    </section>
+  );
+};

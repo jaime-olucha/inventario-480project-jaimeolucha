@@ -3,30 +3,31 @@
   padding: 25px;
   border: 1px solid #dfdfdf;
   border-radius: 10px;
-  transition: padding 250ms ease;
-
+  transition: padding 250ms ease, box-shadow 250ms ease;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 
   &--scrolled {
     padding-top: 10px;
     padding-bottom: 5px;
-    box-shadow: 0 -50px 50px #d3d2d2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px;
+  }
 
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   &__header {
     font-size: 18px;
     font-weight: 500;
-    max-height: 40px;
-    opacity: 1;
-    overflow: hidden;
-    margin-bottom: 0;
-    transition: max-height 250ms ease, opacity 200ms ease, margin-bottom 250ms ease;
+  }
 
-    .filters-card--scrolled & {
-      max-height: 0;
-      opacity: 0;
-      margin-bottom: -8px;
-    }
+  &__action {
+    flex-shrink: 0;
   }
 
   &__icon {

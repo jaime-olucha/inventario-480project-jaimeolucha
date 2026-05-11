@@ -3,16 +3,16 @@ import type { User } from "@/domain/models/User/User";
 import type { CreateUserRequest } from "@/domain/models/User/CreateUserRequest";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { useUserStore } from "@/infrastructure/store/user.store";
-import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
 import { UserPlus } from "lucide-react";
+import { getRoleBadge } from "@/infrastructure/helpers/getRoleBadge";
 import { ProjectsCounter } from "@/ui/components/molecules/projectsCounter/ProjectsCounter";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CreatePersonalModal } from "./CreatePersonalModal";
 import { FiltersCard } from "@/ui/components/organisms/filtersCard/FiltersCard";
 import { FilterSelect } from "@/ui/components/molecules/filterSelect/FilterSelect";
-import { usePersonalFilters, ROLE_OPTIONS } from "../../hooks/usePersonalFilters";
-import { usePagination } from "../../hooks/usePagination";
-import { PaginationControls } from "../../components/PaginationControls/PaginationControls";
+import { usePersonalFilters, ROLE_OPTIONS } from "../../../hooks/usePersonalFilters";
+import { usePagination } from "../../../hooks/usePagination";
+import { PaginationControls } from "../../../components/PaginationControls/PaginationControls";
 import './PersonalPage.scss';
 import { LogoUser } from "@/ui/components/logoUser/LogoUser";
 import { ROUTES } from "@/ui/routes/routes";
@@ -25,6 +25,8 @@ export const PersonalPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeProjectCounts, setActiveProjectCounts] = useState<Record<string, number>>({});
+  const [showFab, setShowFab] = useState(false);
+  const addBtnRef = useRef<HTMLButtonElement>(null);
 
   const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
   const { search, setSearch, status, setStatus, role, setRole, filteredUsers } = usePersonalFilters(users);
@@ -49,6 +51,16 @@ export const PersonalPage = () => {
     });
   }, [users]);
 
+  useEffect(() => {
+    const btn = addBtnRef.current;
+    if (!btn) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowFab(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(btn);
+    return () => observer.disconnect();
+  }, []);
 
   const handleCreateUser = async (data: CreateUserRequest) => {
     await userRepo.createUser(data);
@@ -64,7 +76,7 @@ export const PersonalPage = () => {
           <h1>Personal</h1>
           <p className="info">Gestiona el personal de la empresa</p>
         </div>
-        <button className="add_record" onClick={() => setIsModalOpen(true)}>
+        <button ref={addBtnRef} className="add_record" onClick={() => setIsModalOpen(true)}>
           <UserPlus className="iconBtn" /> Nuevo Personal
         </button>
       </div>
@@ -112,6 +124,12 @@ export const PersonalPage = () => {
       </ul>
 
       <PaginationControls page={page} isFirst={isFirst} isLast={isLast} onPrev={goPrev} onNext={goNext} />
+
+      {showFab && (
+        <button className="add_record add_record--fab" onClick={() => setIsModalOpen(true)}>
+          <UserPlus className="iconBtn" />
+        </button>
+      )}
     </section>
   );
 };

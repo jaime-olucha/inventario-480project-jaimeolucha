@@ -1,10 +1,6 @@
 .section-page {
   padding: 20px;
 
-  & > * + * {
-    margin-top: 15px;
-  }
-
   h1 {
     font-size: 36px;
     font-weight: bold;
@@ -16,7 +12,7 @@
   }
 
   h3 {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 500;
   }
 
@@ -24,13 +20,30 @@
     font-size: 16px;
   }
 
-  .card-user_label {
+  .iconSvg {
+    display: inline-flex;
+    height: 16px;
+    width: 16px;
+    color: var(--color-text-secondary);
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  .card-project_label {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
     font-size: 22px;
-    position: relative;
   }
 
   .info {
     color: var(--color-text-secondary);
+  }
+
+  .info-client {
+    margin-top: 20px;
   }
 
   .section-page_header {
@@ -61,29 +74,57 @@
       background-color: var(--primary-hover);
     }
 
+    &--fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 50;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      animation: fab-in 180ms ease;
+
+      .iconBtn {
+        margin: 0;
+        padding: 0;
+      }
+    }
   }
 
-  .card_user {
+  @keyframes fab-in {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .card_project {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
     gap: 20px;
   }
 
-
-  /*
-  .card-user_info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  .card-project_info {
+    width: 100%;
   }
-*/
+
+  .project_disabled {
+    opacity: 0.5;
+
+  }
+
   .card {
     background-color: white;
     padding: 25px;
     border: 1px solid #dfdfdf;
     border-radius: 10px;
 
-    .logo-user {
+    .logo-project {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -104,9 +145,19 @@
       border-radius: 10px;
       margin-left: 5px;
     }
+
+    .badge-active {
+      background-color: #e9ffe2;
+      color: rgb(73, 202, 14);
+    }
+
+    .badge-inactive {
+      background-color: #ebebeb;
+      color: rgb(100, 100, 100);
+    }
   }
 
-  .user-list {
+  .project-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
@@ -123,6 +174,11 @@
 
       &:hover .card {
         box-shadow: 0 4px 20px #dfdfdf;
+      }
+
+      &:hover .card.project_disabled {
+        box-shadow: none;
+        transform: none;
       }
 
       &:hover .icon-into_project {

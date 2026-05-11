@@ -1,29 +1,25 @@
 import { create } from "zustand";
 import type { AuthState } from "./interface/AuthState";
 
-const STORAGE_KEY = 'token'
+const ACCESS_KEY = 'token';
+const REFRESH_KEY = 'refresh_token';
 
 export const useAuthStore = create<AuthState>((set) => ({
 
-    token: localStorage.getItem(STORAGE_KEY),
-    isAuthenticated: !!localStorage.getItem(STORAGE_KEY),
+  token: localStorage.getItem(ACCESS_KEY),
+  refreshToken: localStorage.getItem(REFRESH_KEY),
+  isAuthenticated: !!localStorage.getItem(ACCESS_KEY),
 
-    setToken: (token) => {
-        localStorage.setItem(STORAGE_KEY, token);
+  setTokens: (accessToken, refreshToken) => {
+    localStorage.setItem(ACCESS_KEY, accessToken);
+    localStorage.setItem(REFRESH_KEY, refreshToken);
+    set({ token: accessToken, refreshToken, isAuthenticated: true });
+  },
 
-        set({
-            token,
-            isAuthenticated: true
-        })
-    },
-
-    logout: () => {
-        localStorage.removeItem(STORAGE_KEY);
-
-        set({
-            token: null,
-            isAuthenticated: false
-        })
-    },
+  logout: () => {
+    localStorage.removeItem(ACCESS_KEY);
+    localStorage.removeItem(REFRESH_KEY);
+    set({ token: null, refreshToken: null, isAuthenticated: false });
+  },
 
 }))

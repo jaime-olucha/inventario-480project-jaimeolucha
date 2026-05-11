@@ -1,6 +1,10 @@
 .section-page {
   padding: 20px;
 
+  &>*+* {
+    margin-top: 15px;
+  }
+
   h1 {
     font-size: 36px;
     font-weight: bold;
@@ -20,7 +24,7 @@
     font-size: 16px;
   }
 
-  .card-client_label {
+  .card-user_label {
     font-size: 22px;
     position: relative;
   }
@@ -57,21 +61,54 @@
       background-color: var(--primary-hover);
     }
 
+    &--fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 50;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      animation: fab-in 180ms ease;
+
+      .iconBtn {
+        margin: 0;
+        padding: 0;
+      }
+    }
   }
 
-  .card_client {
+  @keyframes fab-in {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .card_user {
     display: flex;
     align-items: center;
     gap: 20px;
   }
 
+
+  /*
+  .card-user_info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+*/
   .card {
     background-color: white;
     padding: 25px;
     border: 1px solid #dfdfdf;
     border-radius: 10px;
 
-    .logo-client {
+    .logo-user {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -94,7 +131,7 @@
     }
   }
 
-  .client-list {
+  .user-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;

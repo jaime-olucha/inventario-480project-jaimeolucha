@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios"
 import type { HttpRequestOptions } from "./interface/HttpRequestOption";
 import { useAuthStore } from "../store/auth.store";
+import { setupAuthInterceptor } from "./authInterceptor";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -10,6 +11,8 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json"
   }
 })
+
+setupAuthInterceptor(axiosInstance);
 
 export async function httpClient<TResponse, TBody = undefined>(options: HttpRequestOptions<TBody>): Promise<TResponse> {
 
