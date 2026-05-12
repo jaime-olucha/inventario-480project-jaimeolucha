@@ -26,7 +26,7 @@ export const PersonalDetailPage = () => {
   const [targetUser, setTargetUser] = useState<User>();
   const [showAllActive, setShowAllActive] = useState(false);
   const [showAllInactive, setShowAllInactive] = useState(false);
-  const [modalActive, setModalActive] = useState<"inactivar" | "activar" | null>(null);
+  const [modalActive, setModalActive] = useState<"inactivar" | "activar" | "eliminar" | null>(null);
   const [loadingPatch, setLoadingPatch] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
@@ -45,6 +45,21 @@ export const PersonalDetailPage = () => {
   }, [id, userRepo]);
 
   const closeToast = useCallback(() => setToast(null), []);
+
+  const handleDelete = async () => {
+    if (!id) return;
+    setLoadingPatch(true);
+    try {
+      await userRepo.deleteUser(id);
+      setToast({ message: "Empleado eliminado correctamente", type: "success" });
+      setTimeout(() => navigate(ROUTES.USER.LIST), 1500);
+    } catch {
+      setToast({ message: "No se pudo eliminar el empleado. Inténtalo de nuevo.", type: "error" });
+    } finally {
+      setLoadingPatch(false);
+      setModalActive(null);
+    }
+  };
 
   const handleToggleActive = async () => {
     if (!id || !targetUser) return;
@@ -70,15 +85,20 @@ export const PersonalDetailPage = () => {
 
       {modalActive && (
         <ConfirmModal
-          title={modalActive === "inactivar" ? "Inactivar Usuario" : "Activar Usuario"}
+          title={
+            modalActive === "inactivar" ? "Inactivar Usuario"
+            : modalActive === "activar" ? "Activar Usuario"
+            : "Eliminar Usuario"
+          }
           message={
             modalActive === "inactivar"
               ? "¿Estás seguro de que deseas inactivar a este usuario? Los datos no se eliminarán."
-              : "¿Estás seguro de que deseas activar a este usuario?"
+              : modalActive === "activar"
+              ? "¿Estás seguro de que deseas activar a este usuario?"
+              : "¿Estás seguro de que deseas eliminar a este usuario? Esta acción no se puede deshacer."
           }
-          confirmLabel={modalActive === "inactivar" ? "Confirmar" : "Confirmar"}
           loading={loadingPatch}
-          onConfirm={handleToggleActive}
+          onConfirm={modalActive === "eliminar" ? handleDelete : handleToggleActive}
           onCancel={() => setModalActive(null)}
         />
       )}
@@ -107,7 +127,7 @@ export const PersonalDetailPage = () => {
                 <UserCheck size={15} /> Activar
               </button>
             )}
-            <button className="btn-action btn-eliminar">
+            <button className="btn-action btn-eliminar" onClick={() => setModalActive("eliminar")}>
               <Trash2 size={15} /> Eliminar
             </button>
           </div>

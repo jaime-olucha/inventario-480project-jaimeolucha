@@ -11,4 +11,5 @@ export interface UserRepository {
   getTimeEntries(id: EntityId): Promise<UserTimeEntriesResponse>;
   createUser(data: CreateUserRequest): Promise<void>;
   patchActive(id: EntityId, isActive: boolean): Promise<void>;
+  deleteUser(id: EntityId): Promise<void>;
 }
