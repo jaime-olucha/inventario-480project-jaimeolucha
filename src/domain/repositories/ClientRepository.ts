@@ -10,4 +10,5 @@ export interface ClientRepository {
   getProjects(id: EntityId): Promise<ClientProject[]>;
   getContacts(id: EntityId): Promise<Contact[]>;
   createClient(data: CreateClientRequest): Promise<void>;
+  patchActive(id: EntityId, isActive: boolean): Promise<void>;
 }

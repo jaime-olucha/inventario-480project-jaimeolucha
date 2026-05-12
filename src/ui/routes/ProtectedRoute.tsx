@@ -10,6 +10,9 @@ interface PropsProtectedRoute {
 
 export function ProtectedRoute({ allowedRoles, children }: PropsProtectedRoute) {
   const user = useUserStore((store) => store.user);
+  const isInitialized = useUserStore((store) => store.isInitialized);
+
+  if (!isInitialized) return null;
 
   if (!user || !allowedRoles.includes(user.role)) {
     return <Navigate to={ROUTES.DASHBOARD} replace />;

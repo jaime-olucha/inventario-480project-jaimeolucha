@@ -10,4 +10,5 @@ export interface UserRepository {
   getProjects(id: EntityId): Promise<UserProject[]>;
   getTimeEntries(id: EntityId): Promise<UserTimeEntriesResponse>;
   createUser(data: CreateUserRequest): Promise<void>;
+  patchActive(id: EntityId, isActive: boolean): Promise<void>;
 }

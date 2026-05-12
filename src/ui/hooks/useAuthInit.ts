@@ -9,10 +9,14 @@ export const useAuthInit = () => {
   const token = useAuthStore((state) => state.token)
   const logout = useAuthStore((state) => state.logout)
   const setUser = useUserStore((state) => state.setUser)
+  const setInitialized = useUserStore((state) => state.setInitialized)
   const { user } = useRepositories()
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setInitialized();
+      return;
+    }
 
     try {
       const decode = jwtDecode<JwtPayload>(token)
@@ -21,10 +25,13 @@ export const useAuthInit = () => {
         setUser(u);
       }).catch(() => {
         logout();
+      }).finally(() => {
+        setInitialized();
       })
 
     } catch {
       logout()
+      setInitialized();
     }
-  }, [token, logout, setUser, user])
+  }, [token, logout, setUser, setInitialized, user])
 }
