@@ -8,12 +8,15 @@ import type { UserDTO } from "@/infrastructure/dtos/User/UserDTO";
 import type { CreateUserRequestDTO } from "@/infrastructure/dtos/User/CreateUserRequestDTO";
 import type { UserProjectDTO } from "@/infrastructure/dtos/User/UserProjectDTO";
 import type { UserTimeEntriesResponseDTO } from "@/infrastructure/dtos/User/UserTimeEntriesResponseDTO";
+import type { UpdateUserRequest } from "@/domain/models/User/UpdateUserRequest";
+import type { UpdateUserRequestDTO } from "@/infrastructure/dtos/User/UpdateUserRequestDTO";
 import { httpClient } from "../http/httpClient";
 import { API_ENDPOINTS } from "../http/types/endpoints";
 import { HttpMethod } from "../http/types/HttpMethods";
 import { mapUser } from "../mappers/mapUser";
 import { mapUserProject } from "../mappers/mapUserProject";
 import { mapUserTimeEntriesResponse } from "../mappers/mapTimeEntry";
+import { mapUpdateUserRequest } from "../mappers/mapUpdateUserRequest";
 import { v7 as uuidv7 } from "uuid";
 
 export class ApiUserRepository implements UserRepository {
@@ -70,6 +73,15 @@ export class ApiUserRepository implements UserRepository {
     await httpClient<void>({
       method: HttpMethod.DELETE,
       path: API_ENDPOINTS.USERS.BY_ID(id),
+    });
+  }
+
+  async putUser(id: EntityId, data: UpdateUserRequest): Promise<void> {
+    const body = mapUpdateUserRequest(data);
+    await httpClient<void, UpdateUserRequestDTO>({
+      method: HttpMethod.PUT,
+      path: API_ENDPOINTS.USERS.BY_ID(id),
+      body,
     });
   }
 }

@@ -9,10 +9,10 @@ export function setupAuthInterceptor(axiosInstance: AxiosInstance): void {
       const originalRequest = error.config;
 
       const is401 = error.response?.status === 401;
-      const isRefreshEndpoint = originalRequest?.url?.includes(API_ENDPOINTS.AUTH.REFRESH);
+      const isRefreshEndpointGio = originalRequest?.url?.includes(API_ENDPOINTS.AUTH.REFRESH);
       const alreadyRetried = originalRequest?._retry;
 
-      if (is401 && !isRefreshEndpoint && !alreadyRetried) {
+      if (is401 && !isRefreshEndpointGio && !alreadyRetried) {
         originalRequest._retry = true;
 
         const refreshToken = useAuthStore.getState().refreshToken;
@@ -24,8 +24,7 @@ export function setupAuthInterceptor(axiosInstance: AxiosInstance): void {
 
         try {
           const { data } = await axiosInstance.post<{ token: string }>(
-            API_ENDPOINTS.AUTH.REFRESH,
-            { refresh_token: refreshToken }
+            API_ENDPOINTS.AUTH.REFRESH, { refresh_token: refreshToken }
           );
 
           useAuthStore.getState().setTokens(data.token, refreshToken);

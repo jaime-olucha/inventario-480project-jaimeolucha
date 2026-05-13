@@ -1,6 +1,7 @@
 import type { EntityId } from "../value-objects/EntityId";
 import type { User } from "../models/User/User";
 import type { CreateUserRequest } from "../models/User/CreateUserRequest";
+import type { UpdateUserRequest } from "../models/User/UpdateUserRequest";
 import type { UserProject } from "../models/User/UserProject";
 import type { UserTimeEntriesResponse } from "../models/User/UserTimeEntriesResponse";
 
@@ -12,4 +13,6 @@ export interface UserRepository {
   createUser(data: CreateUserRequest): Promise<void>;
   patchActive(id: EntityId, isActive: boolean): Promise<void>;
   deleteUser(id: EntityId): Promise<void>;
+  putUser(id: EntityId, data: UpdateUserRequest): Promise<void>
+
 }
