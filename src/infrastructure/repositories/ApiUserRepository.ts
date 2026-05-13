@@ -57,4 +57,19 @@ export class ApiUserRepository implements UserRepository {
       body,
     });
   }
+
+  async patchActive(id: EntityId, isActive: boolean): Promise<void> {
+    await httpClient<void, { is_active: boolean }>({
+      method: HttpMethod.PATCH,
+      path: API_ENDPOINTS.USERS.BY_ID(id),
+      body: { is_active: isActive },
+    });
+  }
+
+  async deleteUser(id: EntityId): Promise<void> {
+    await httpClient<void>({
+      method: HttpMethod.DELETE,
+      path: API_ENDPOINTS.USERS.BY_ID(id),
+    });
+  }
 }

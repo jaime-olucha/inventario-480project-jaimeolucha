@@ -1,8 +1,10 @@
-import type { User } from "../../dtos/User/UserDTO";
+import type { User } from "@/domain/models/User/User";
 
 
 export interface UserState {
   user: User | null;
-  setUser: (user: User) => void
-  clearUser: () => void
+  isInitialized: boolean;
+  setUser: (user: User) => void;
+  setInitialized: () => void;
+  clearUser: () => void;
 }

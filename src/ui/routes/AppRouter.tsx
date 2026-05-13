@@ -5,6 +5,8 @@ import { ROUTES } from "./routes";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { SIDEBAR_ITEMS } from "../components/sidebar/sidebarConfig";
 import { LoginPage } from "../pages/LoginPage/LoginPage";
+import { ProjectDetailPage } from "../pages/Project/ProjectDetailPage/ProjectDetailPage";
+import { ClientDetailPage } from "../pages/Client/ClientDetailPage/ClientDetailPage";
 import { PersonalDetailPage } from "../pages/Personal/PersonalDetailPage/PersonalDetailPage";
 
 export const AppRoutes = () => {
@@ -35,8 +37,8 @@ export const AppRoutes = () => {
         ))}
 
         <Route path={`${ROUTES.USER.LIST}/:id`} element={<PersonalDetailPage />} />
-        <Route path={`${ROUTES.CLIENTS.LIST}/:id`} element={<PersonalDetailPage />} />
-        <Route path={`${ROUTES.PROJECTS.LIST}/:id`} element={<PersonalDetailPage />} />
+        <Route path={`${ROUTES.CLIENTS.LIST}/:id`} element={<ClientDetailPage />} />
+        <Route path={`${ROUTES.PROJECTS.LIST}/:id`} element={<ProjectDetailPage />} />
 
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       </Route>
