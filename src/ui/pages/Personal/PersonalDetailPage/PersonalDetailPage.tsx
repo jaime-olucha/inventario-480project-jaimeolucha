@@ -15,7 +15,6 @@ import { ConfirmModal } from "@/ui/components/molecules/confirmModal/ConfirmModa
 import { Toast } from "@/ui/components/molecules/toast/Toast";
 import '@/ui/components/molecules/confirmModal/ConfirmModal.scss';
 
-const PROJECTS_PREVIEW_LIMIT = 2;
 
 export const PersonalDetailPage = () => {
   const { id } = useParams<{ id: EntityId }>();
@@ -33,8 +32,9 @@ export const PersonalDetailPage = () => {
   const isAdmin = userStore?.role === SYSTEM_ROLES.ADMIN;
   const isMyProfile = userStore?.id === targetUser?.id;
 
-  const activeProjects = projects.filter((p) => p.isActive);
-  const inactiveProjects = projects.filter((p) => !p.isActive);
+  const PROJECTS_PREVIEW_LIMIT = 2;
+  const activeProjects = projects.filter((project) => project.isActive);
+  const inactiveProjects = projects.filter((project) => !project.isActive);
   const visibleActive = showAllActive ? activeProjects : activeProjects.slice(0, PROJECTS_PREVIEW_LIMIT);
   const visibleInactive = showAllInactive ? inactiveProjects : inactiveProjects.slice(0, PROJECTS_PREVIEW_LIMIT);
 
@@ -53,8 +53,10 @@ export const PersonalDetailPage = () => {
       await userRepo.deleteUser(id);
       setToast({ message: "Empleado eliminado correctamente", type: "success" });
       setTimeout(() => navigate(ROUTES.USER.LIST), 1500);
-    } catch {
+    } catch (err) {
       setToast({ message: "No se pudo eliminar el empleado. Inténtalo de nuevo.", type: "error" });
+      console.log(err);
+
     } finally {
       setLoadingPatch(false);
       setModalActive(null);
@@ -87,15 +89,15 @@ export const PersonalDetailPage = () => {
         <ConfirmModal
           title={
             modalActive === "inactivar" ? "Inactivar Usuario"
-            : modalActive === "activar" ? "Activar Usuario"
-            : "Eliminar Usuario"
+              : modalActive === "activar" ? "Activar Usuario"
+                : "Eliminar Usuario"
           }
           message={
             modalActive === "inactivar"
               ? "¿Estás seguro de que deseas inactivar a este usuario? Los datos no se eliminarán."
               : modalActive === "activar"
-              ? "¿Estás seguro de que deseas activar a este usuario?"
-              : "¿Estás seguro de que deseas eliminar a este usuario? Esta acción no se puede deshacer."
+                ? "¿Estás seguro de que deseas activar a este usuario?"
+                : "¿Estás seguro de que deseas eliminar a este usuario? Esta acción no se puede deshacer."
           }
           loading={loadingPatch}
           onConfirm={modalActive === "eliminar" ? handleDelete : handleToggleActive}
