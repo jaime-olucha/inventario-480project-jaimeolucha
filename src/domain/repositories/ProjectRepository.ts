@@ -14,4 +14,6 @@ export interface ProjectRepository {
   getTimeEntries(id: EntityId): Promise<ProjectTimeEntry[]>;
   getTimeEntryById(projectId: EntityId, entryId: EntityId): Promise<ProjectTimeEntry>;
   createProject(data: CreateProjectRequest): Promise<void>;
+  patchActive(id: EntityId, isActive: boolean): Promise<void>;
+
 }

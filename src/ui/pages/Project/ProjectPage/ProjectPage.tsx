@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import type { ProjectListItem } from "@/domain/models/Project/ProjectListItem";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { useUserStore } from "@/infrastructure/store/user.store";
 import { FolderPlus, User as UserIcon } from "lucide-react";
@@ -13,27 +12,38 @@ import { ROUTES } from "@/ui/routes/routes";
 import { useFilters } from "@/ui/hooks/useFilters";
 import type { CreateProjectRequest } from "@/domain/models/Project/CreateProjectRequest";
 import { getActiveBadge } from "@/infrastructure/helpers/getActveBadge";
+import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
+import type { UserProject } from "@/domain/models/User/UserProject";
 
 const PAGE_LIMIT = 20;
 
 export const ProjectPage = () => {
   const userStore = useUserStore((store) => store.user);
-  const { project: projectRepo } = useRepositories();
-  const [projects, setProjects] = useState<ProjectListItem[]>([]);
+  const { project: projectRepo, user: userRepo } = useRepositories();
+  const [projects, setProjects] = useState<UserProject[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFab, setShowFab] = useState(false);
   const addBtnRef = useRef<HTMLButtonElement>(null);
 
   const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
+  const isAdmin = userStore?.role === SYSTEM_ROLES.ADMIN;
   const { search, setSearch, status, setStatus, filtered } = useFilters(projects);
 
   useEffect(() => {
     if (!userStore) return;
-    projectRepo.getAll(page, limit).then(result => {
-      setProjects(result);
-      setIsLast(result.length < limit);
-    });
-  }, [projectRepo, page, limit]);
+
+    if (isAdmin) {
+      projectRepo.getAll(page, limit).then(result => {
+        setProjects(result);
+        setIsLast(result.length < limit);
+      });
+    } else {
+      userRepo.getProjects(userStore.id).then(result => {
+        setProjects(result);
+        setIsLast(result.length < limit);
+      });
+    }
+  }, [userStore, projectRepo, userRepo, page, limit]);
 
   useEffect(() => {
     const btn = addBtnRef.current;
@@ -60,9 +70,12 @@ export const ProjectPage = () => {
           <h1>Proyectos</h1>
           <p className="info">Todos los proyectos de la empresa</p>
         </div>
-        <button ref={addBtnRef} className="add_record" onClick={() => setIsModalOpen(true)}>
-          <FolderPlus className="iconBtn" /> Nuevo Proyecto
-        </button>
+
+        {userStore?.role === SYSTEM_ROLES.ADMIN && (
+          <button ref={addBtnRef} className="add_record" onClick={() => setIsModalOpen(true)}>
+            <FolderPlus className="iconBtn" /> Nuevo Proyecto
+          </button>
+        )}
       </div>
 
       {isModalOpen && (
