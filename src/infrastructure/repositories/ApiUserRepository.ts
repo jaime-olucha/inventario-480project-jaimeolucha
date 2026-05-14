@@ -3,21 +3,22 @@ import type { EntityId } from "@/domain/value-objects/EntityId";
 import type { User } from "@/domain/models/User/User";
 import type { CreateUserRequest } from "@/domain/models/User/CreateUserRequest";
 import type { UserProject } from "@/domain/models/User/UserProject";
-import type { UserTimeEntriesResponse } from "@/domain/models/User/UserTimeEntriesResponse";
 import type { UserDTO } from "@/infrastructure/dtos/User/UserDTO";
 import type { CreateUserRequestDTO } from "@/infrastructure/dtos/User/CreateUserRequestDTO";
 import type { UserProjectDTO } from "@/infrastructure/dtos/User/UserProjectDTO";
-import type { UserTimeEntriesResponseDTO } from "@/infrastructure/dtos/User/UserTimeEntriesResponseDTO";
 import type { UpdateUserRequest } from "@/domain/models/User/UpdateUserRequest";
 import type { UpdateUserRequestDTO } from "@/infrastructure/dtos/User/UpdateUserRequestDTO";
+import type { CreateTimeEntryRequest } from "@/domain/models/User/CreateTimeEntryRequest";
+import type { CreateTimeEntryRequestDTO } from "@/infrastructure/dtos/User/CreateTimeEntryRequestDTO";
 import { httpClient } from "../http/httpClient";
 import { API_ENDPOINTS } from "../http/types/endpoints";
 import { HttpMethod } from "../http/types/HttpMethods";
-import { mapUser } from "../mappers/mapUser";
+import { mapUser, mapUpdateUserRequest } from "../mappers/mapUser";
 import { mapUserProject } from "../mappers/mapUserProject";
-import { mapUserTimeEntriesResponse } from "../mappers/mapTimeEntry";
-import { mapUpdateUserRequest } from "../mappers/mapUpdateUserRequest";
+import { mapUserTimeEntry } from "../mappers/mapTimeEntry";
 import { v7 as uuidv7 } from "uuid";
+import type { UserTimeEntry } from "@/domain/models/User/UserTimeEntry";
+import type { UserTimeEntryDTO } from "../dtos/User/UserTimeEntriyDTO";
 
 export class ApiUserRepository implements UserRepository {
   async getAll(page: number, limit: number): Promise<User[]> {
@@ -44,12 +45,33 @@ export class ApiUserRepository implements UserRepository {
     return response.map(mapUserProject);
   }
 
-  async getTimeEntries(id: EntityId): Promise<UserTimeEntriesResponse> {
-    const response = await httpClient<UserTimeEntriesResponseDTO>({
+  async getTimeEntries(id: EntityId): Promise<UserTimeEntry[]> {
+    const response = await httpClient<UserTimeEntryDTO[] | { data?: UserTimeEntryDTO[]; items?: UserTimeEntryDTO[]; results?: UserTimeEntryDTO[]; time_entries?: UserTimeEntryDTO[] }>({
       method: HttpMethod.GET,
       path: API_ENDPOINTS.USERS.TIME_ENTRIES(id),
     });
-    return mapUserTimeEntriesResponse(response);
+
+    const entries = Array.isArray(response)
+      ? response
+      : response.data ?? response.items ?? response.results ?? response.time_entries ?? [];
+
+    return entries.map(mapUserTimeEntry);
+  }
+
+  async createTimeEntry(id: EntityId, data: CreateTimeEntryRequest): Promise<void> {
+    const body: CreateTimeEntryRequestDTO = {
+      id: uuidv7(),
+      project_id: data.projectId,
+      date: data.date,
+      hour: data.hours,
+      comment: data.comment,
+    };
+
+    await httpClient<void, CreateTimeEntryRequestDTO>({
+      method: HttpMethod.POST,
+      path: API_ENDPOINTS.USERS.TIME_ENTRIES(id),
+      body,
+    });
   }
 
   async createUser(data: CreateUserRequest): Promise<void> {
