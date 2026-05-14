@@ -283,21 +283,21 @@ export const PersonalDetailPage = () => {
                   />
                 </div>
 
-                {userStore.id !== targetUser?.id && (
-                <div className="form-group checkbox-group">
-                  <label>Rol de Usuario</label>
-                  <div className="checkbox-wrapper">
-                    <input
-                      id="isAdmin"
-                      name="isAdmin"
-                      type="checkbox"
-                      checked={editData.role === SYSTEM_ROLES.ADMIN}
-                      onChange={handleRoleToggle}
-                      className="edit-checkbox"
-                    />
-                    <label htmlFor="isAdmin">Administrador</label>
+                {userStore?.id !== targetUser?.id && (
+                  <div className="form-group checkbox-group">
+                    <label>Rol de Usuario</label>
+                    <div className="checkbox-wrapper">
+                      <input
+                        id="isAdmin"
+                        name="isAdmin"
+                        type="checkbox"
+                        checked={editData.role === SYSTEM_ROLES.ADMIN}
+                        onChange={handleRoleToggle}
+                        className="edit-checkbox"
+                      />
+                      <label htmlFor="isAdmin">Administrador</label>
+                    </div>
                   </div>
-                </div>
                 )}
               </div>
             </div>

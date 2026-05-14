@@ -8,6 +8,8 @@ import type { ProjectRoleDTO } from "@/infrastructure/dtos/Project/ProjectRoleDT
 import type { ProjectRole } from "../../domain/models/Project/ProjectRole";
 import type { ProjectUserDTO } from "@/infrastructure/dtos/Project/ProjectUserDTO";
 import type { ProjectUser } from "../../domain/models/Project/ProjectUser";
+import type { UpdateProjectRequest } from "@/domain/models/Project/UpdateProjectRequest";
+import type { UpdateProjectRequestDTO } from "../dtos/Project/UpdateProjectRequestDTO";
 
 
 export const mapProject = (dto: ProjectDTO): Project => ({
@@ -40,4 +42,12 @@ export const mapProjectUser = (dto: ProjectUserDTO): ProjectUser => ({
   name: dto.name,
   surname: dto.surname,
   role: mapProjectRole(dto.role),
+})
+
+export const mapUpdateProject = (request: UpdateProjectRequest): UpdateProjectRequestDTO => ({
+  name: request.name,
+  description: request.description,
+  start_date: request.startDate,
+  is_active: request.isActive,
+  client_id: request.clientId
 })

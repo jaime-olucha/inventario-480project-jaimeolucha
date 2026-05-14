@@ -1,4 +1,4 @@
-.personal-detail-page {
+.project-detail-page {
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -76,12 +76,6 @@
           background-color: #f0fdf4;
         }
       }
-
-      .confirm-text {
-        font-size: 13px;
-        color: var(--color-text-secondary);
-        align-self: center;
-      }
     }
   }
 
@@ -106,11 +100,6 @@
     a {
       color: inherit;
     }
-  }
-
-  .iconSvg {
-    color: var(--color-text-secondary);
-    flex-shrink: 0;
   }
 
   .profile-card {
