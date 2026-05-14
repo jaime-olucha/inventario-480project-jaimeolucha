@@ -1,5 +1,7 @@
 import type { UserDTO } from "@/infrastructure/dtos/User/UserDTO";
 import type { User } from "../../domain/models/User/User";
+import type { UpdateUserRequest } from "../../domain/models/User/UpdateUserRequest";
+import type { UpdateUserRequestDTO } from "../dtos/User/UpdateUserRequestDTO";
 
 export const mapUser = (dto: UserDTO): User => ({
   id: dto.id,
@@ -8,4 +10,12 @@ export const mapUser = (dto: UserDTO): User => ({
   email: dto.email,
   role: dto.role,
   isActive: dto.is_active,
+});
+
+export const mapUpdateUserRequest = (request: UpdateUserRequest): UpdateUserRequestDTO => ({
+  name: request.name,
+  surname: request.surname,
+  email: request.email,
+  is_active: request.isActive,
+  role: request.role,
 });

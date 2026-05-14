@@ -22,12 +22,14 @@ export const API_ENDPOINTS = {
     LIST: `/clients`,
     CREATE: `/clients`,
     BY_ID: (id: EntityId) => `/clients/${id}`,
-    CONTACTS: (id: EntityId) => `/clients/${id}/contacts`,
     PROJECTS: (id: EntityId) => `/clients/${id}/projects`,
+    CONTACTS: (id: EntityId) => `/clients/${id}/contacts`,
+    CONTACT_ID: (id: EntityId, contact_id: EntityId) => `/clients/${id}/contacts/${contact_id}`,
   },
 
   SECTORS: {
     LIST: `/sectors`,
+    BY_ID: (id: EntityId) => `/sectors/${id}`,
   },
 
   TECHNOLOGIES: {
