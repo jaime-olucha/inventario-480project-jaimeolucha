@@ -1,38 +1,56 @@
-import type { TimeEntry } from "../../domain/models/User/TimeEntry";
+import type { UserTimeEntry } from "../../domain/models/User/UserTimeEntry";
 
-export const getWeeklyHours = (entries: TimeEntry[]) => {
+export interface DayProjectEntry {
+  projectId: string;
+  projectName: string;
+  hours: number;
+}
+
+export interface WeekDay {
+  day: string;
+  dateISO: string;
+  total: number;
+  entries: DayProjectEntry[];
+}
+
+export const getWeeklyHours = (timeEntries: UserTimeEntry[]): WeekDay[] => {
   const days = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
   const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
-  const week = [];
-
   const today = new Date();
   const currentDay = today.getDay();
-
   const diffToMonday = currentDay === 0 ? 0 : 1 - currentDay;
-
   const monday = new Date(today);
   monday.setDate(today.getDate() + diffToMonday);
 
-  for (let i = 0; i < days.length; i++) {
+  const week: WeekDay[] = days.map((label, i) => {
     const date = new Date(monday);
     date.setDate(monday.getDate() + i);
-
-    week.push({
-      day: `${days[i]} ${date.getDate()} ${months[date.getMonth()]}`,
+    return {
+      day: `${label} ${date.getDate()} ${months[date.getMonth()]}`,
       dateISO: date.toISOString().split("T")[0],
       total: 0,
-    });
-  }
+      entries: [],
+    };
+  });
 
-  for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i];
+  for (const entry of timeEntries) {
+    const daySlot = week.find((d) => d.dateISO === entry.date);
+    if (!daySlot) continue;
 
-    for (let j = 0; j < week.length; j++) {
-      if (entry.date === week[j].dateISO) {
-        week[j].total += entry.hours;
-      }
+    daySlot.total += entry.hours;
+
+    const existing = daySlot.entries.find((e) => e.projectId === String(entry.projectId));
+    if (existing) {
+      existing.hours += entry.hours;
+    } else {
+      daySlot.entries.push({
+        projectId: String(entry.projectId),
+        projectName: entry.projectName,
+        hours: entry.hours,
+      });
     }
   }
+
   return week;
 };
