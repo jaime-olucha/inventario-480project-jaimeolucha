@@ -1,32 +1,42 @@
 import { Link } from "react-router-dom";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { useUserStore } from "@/infrastructure/store/user.store";
-import { Plus } from "lucide-react";
+import { Building2, Plus } from "lucide-react";
 import { ProjectsCounter } from "@/ui/components/molecules/projectsCounter/ProjectsCounter";
 import { useEffect, useRef, useState } from "react";
+import { FilterSelect } from "@/ui/components/molecules/filterSelect/FilterSelect";
+import type { Sector } from "@/domain/models/Client/Sector";
 import { FiltersCard } from "@/ui/components/organisms/filtersCard/FiltersCard";
 import { usePagination } from "../../../hooks/usePagination";
 import { PaginationControls } from "../../../components/PaginationControls/PaginationControls";
 import './ClientPage.scss';
-import { LogoUser } from "@/ui/components/logoUser/LogoUser";
 import { ROUTES } from "@/ui/routes/routes";
 import type { Client } from "@/domain/models/Client/Client";
 import { useFilters } from "@/ui/hooks/useFilters";
 import type { CreateClientRequest } from "@/domain/models/Client/CreateClientRequest";
 import { CreateClientModal } from "./CreateClientModal";
+import { Toast } from "@/ui/components/molecules/toast/Toast";
+import { getErrorMessage } from "@/infrastructure/helpers/getErrorMessage";
 
 const PAGE_LIMIT = 20;
 
 export const ClientPage = () => {
   const userStore = useUserStore((store) => store.user);
-  const { client: clientRepo } = useRepositories();
+  const { client: clientRepo, sector: sectorRepo } = useRepositories();
   const [clients, setClients] = useState<Client[]>([]);
+  const [sectors, setSectors] = useState<Sector[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeProjectCounts, setActiveProjectCounts] = useState<Record<string, number>>({});
   const [showFab, setShowFab] = useState(false);
+  const [selectedSectorId, setSelectedSectorId] = useState<string>('all');
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const addBtnRef = useRef<HTMLButtonElement>(null);
   const { page, limit, isFirst, isLast, setIsLast, goNext, goPrev } = usePagination(PAGE_LIMIT);
-  const { search, setSearch, status, setStatus, filtered } = useFilters(clients);
+  const { search, setSearch, status, setStatus, filtered: baseFiltered } = useFilters(clients);
+
+  const filtered = baseFiltered.filter(client =>
+    selectedSectorId === 'all' || client.sectorId === selectedSectorId
+  );
 
   useEffect(() => {
     if (!userStore) return;
@@ -34,7 +44,8 @@ export const ClientPage = () => {
       setClients(result);
       setIsLast(result.length < limit);
     });
-  }, [clientRepo, page, limit]);
+    sectorRepo.getAll().then(setSectors);
+  }, [clientRepo, sectorRepo, page, limit]);
 
   useEffect(() => {
     if (clients.length === 0) return;
@@ -61,14 +72,20 @@ export const ClientPage = () => {
   }, []);
 
   const handleCreateClient = async (data: CreateClientRequest) => {
-    await clientRepo.createClient(data);
-    const result = await clientRepo.getAll(page, limit);
-    setClients(result);
-    setIsLast(result.length < limit);
+    try {
+      await clientRepo.createClient(data);
+      const result = await clientRepo.getAll(page, limit);
+      setClients(result);
+      setIsLast(result.length < limit);
+      setToast({ message: "Cliente creado correctamente", type: "success" });
+    } catch (error) {
+      setToast({ message: getErrorMessage(error), type: "error" });
+    }
   };
 
   return (
     <section className="section-page">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="section-page_header">
         <div className="header_title">
           <h1>Clientes</h1>
@@ -96,19 +113,32 @@ export const ClientPage = () => {
         entityLabel="cliente"
         searchLabel="Buscar Cliente"
         searchPlaceholder="Nombre..."
-
+        extraFilters={
+          <FilterSelect
+            label="Sector"
+            value={selectedSectorId}
+            options={[
+              { value: 'all', label: 'Todos los sectores' },
+              ...sectors.map(s => ({ value: String(s.id), label: s.name }))
+            ]}
+            onChange={setSelectedSectorId}
+          />
+        }
       />
 
-      <ul className="user-list">
+      <ul className="client-list">
         {filtered.map((client) => (
           <li className="li-map" key={client.id}>
             <Link to={ROUTES.CLIENTS.BY_ID(client.id)}>
-              <article className="card card_user">
-                <div>
-                  <LogoUser user={client} className="logo-user" />
+              <article className={`card card_client ${!client.isActive ? 'project_disabled' : ''}`}>
+                <div className="logo-client">
+                  <Building2 size={32} />
                 </div>
                 <div className="card-user_info">
-                  <h2 className="card-user_label">{client.name}</h2>
+                  <h2 className="card-client_label">
+                    {client.name}
+                    {!client.isActive && <span className="card_badge badge-inactive">INACTIVO</span>}
+                  </h2>
                   <p className="info"><strong>Sector: </strong>{client.sectorName}</p>
                 </div>
                 <ProjectsCounter count={activeProjectCounts[String(client.id)] ?? 0} />
