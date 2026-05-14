@@ -80,14 +80,25 @@
   }
 
   @keyframes fab-in {
-    from { transform: scale(0.6); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
+    from {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   .card_client {
     display: flex;
     align-items: center;
     gap: 20px;
+  }
+
+  .project_disabled {
+    opacity: 0.5;
   }
 
   .card {
@@ -97,15 +108,19 @@
     border-radius: 10px;
 
     .logo-client {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 60px;
-      height: 60px;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 18px;
-      background-color: var(--primary);
+      font-weight: 700;
+      font-size: 20px;
+      flex-shrink: 0;
+      background-color: #f0f7ff;
+      color: #0066ff;
+      border: 1px solid #e0efff;
+      border-radius: 16px;
     }
 
     .card_badge {
@@ -116,6 +131,11 @@
       color: rgb(202, 14, 14);
       border-radius: 10px;
       margin-left: 5px;
+    }
+
+    .badge-inactive {
+      background-color: #ebebeb;
+      color: rgb(100, 100, 100);
     }
   }
 
@@ -138,11 +158,35 @@
         box-shadow: 0 4px 20px #dfdfdf;
       }
 
+      &:hover .card.project_disabled {
+        box-shadow: none;
+        transform: none;
+      }
+
       &:hover .icon-into_project {
         color: black;
       }
-
     }
   }
 
+  .btn-manage-sectors {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+  }
 }

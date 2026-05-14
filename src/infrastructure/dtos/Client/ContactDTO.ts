@@ -1,4 +1,4 @@
-import type { EntityId } from "../value-objects/EntityId";
+import type { EntityId } from "@/domain/value-objects/EntityId";
 
 
 export interface ContactDTO {
@@ -6,7 +6,7 @@ export interface ContactDTO {
   full_name: string;
   phone_number?: string;
   email: string;
-  is_active: string;
-  is_main: string;
+  is_active: boolean;
+  is_main: boolean;
   note?: string;
 }

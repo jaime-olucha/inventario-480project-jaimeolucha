@@ -97,6 +97,47 @@
       font-size: 13px;
       color: #e53e3e;
     }
+
+    .form_field-with-action {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+
+      .field-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+
+        label {
+          font-size: 14px;
+          font-weight: 500;
+          color: #767f8f;
+          margin-bottom: 0;
+        }
+      }
+
+      .btn-inline-action {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(0, 179, 65, 0.08);
+        }
+      }
+    }
   }
 
   .form_server_error {
