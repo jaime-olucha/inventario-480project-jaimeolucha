@@ -282,6 +282,8 @@ export const PersonalDetailPage = () => {
                     className="edit-input"
                   />
                 </div>
+
+                {userStore.id !== targetUser?.id && (
                 <div className="form-group checkbox-group">
                   <label>Rol de Usuario</label>
                   <div className="checkbox-wrapper">
@@ -296,6 +298,7 @@ export const PersonalDetailPage = () => {
                     <label htmlFor="isAdmin">Administrador</label>
                   </div>
                 </div>
+                )}
               </div>
             </div>
           )}

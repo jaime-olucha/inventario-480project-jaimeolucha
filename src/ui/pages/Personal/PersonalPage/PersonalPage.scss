@@ -101,6 +101,10 @@
     gap: 20px;
   }
 
+  .user_disabled {
+    opacity: 0.5;
+  }
+
   .card {
     background-color: white;
     padding: 25px;
@@ -128,6 +132,19 @@
       border-radius: 10px;
       margin-left: 5px;
     }
+
+    .badge-inactive {
+      background-color: #ebebeb;
+      color: rgb(100, 100, 100);
+    }
+
+    &.user_disabled {
+      .logo-user {
+        background-color: #ebebeb;
+        color: rgb(100, 100, 100);
+        border-color: #d6d6d6;
+      }
+    }
   }
 
   .user-list {
@@ -147,6 +164,11 @@
 
       &:hover .card {
         box-shadow: 0 4px 20px #dfdfdf;
+      }
+
+      &:hover .card.user_disabled {
+        box-shadow: none;
+        transform: none;
       }
 
       &:hover .icon-into_project {

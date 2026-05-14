@@ -108,12 +108,15 @@ export const PersonalPage = () => {
         {filteredUsers.map((user) => (
           <li className="li-map" key={user.id}>
             <Link to={ROUTES.USER.BY_ID(user.id)}>
-              <article className="card card_user">
+              <article className={`card card_user ${!user.isActive ? 'user_disabled' : ''}`}>
                 <div>
                   <LogoUser user={user} className="logo-user" />
                 </div>
                 <div className="card-user_info">
-                  <h2 className="card-user_label">{user.name} {user.surname} {getRoleBadge(user.role) && <span className="card_badge">{getRoleBadge(user.role)}</span>}</h2>
+                  <h2 className="card-user_label">
+                    {user.name} {user.surname} {getRoleBadge(user.role) && <span className="card_badge">{getRoleBadge(user.role)}</span>}
+                    {!user.isActive && <span className="card_badge badge-inactive">INACTIVO</span>}
+                  </h2>
                   <p className="info"><strong>Correo: </strong>{user.email}</p>
                 </div>
                 <ProjectsCounter count={activeProjectCounts[user.id] ?? 0} />
