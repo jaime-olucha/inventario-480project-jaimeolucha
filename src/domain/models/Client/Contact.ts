@@ -6,7 +6,9 @@ export interface Contact {
   fullName: string;
   phone?: string;
   email: string;
-  isActive: string;
-  isMain: string;
+  isActive: boolean;
+  isMain: boolean;
   note?: string;
 }
+
+export interface CreateContactRequest extends Omit<Contact, 'id'> { }
