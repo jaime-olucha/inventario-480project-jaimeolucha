@@ -15,9 +15,10 @@ export const mapUserTimeEntry = (dto: UserTimeEntryDTO): UserTimeEntry => ({
 
 export const mapProjectTimeEntry = (dto: ProjectTimeEntryDTO): ProjectTimeEntry => ({
   id: dto.id,
+  userId: dto.id_user,
   date: dto.date,
   hours: dto.hour,
   comment: dto.comment,
   name: dto.name,
-  surname: dto.surname
+  surname: dto.surname,
 });
