@@ -29,7 +29,10 @@ export const mapProjectListItem = (dto: ProjectListItemDTO): ProjectListItem => 
 
 export const mapProjectDetail = (dto: ProjectDetailDTO): ProjectDetail => ({
   ...mapProject(dto),
-  editable: dto.editable,
+  permissions: {
+    canEdit: dto.permissions?.can_edit ?? true,
+    canDelete: dto.permissions?.can_delete ?? true,
+  },
 });
 
 export const mapProjectRole = (dto: ProjectRoleDTO): ProjectRole => ({
@@ -42,6 +45,7 @@ export const mapProjectUser = (dto: ProjectUserDTO): ProjectUser => ({
   name: dto.name,
   surname: dto.surname,
   role: mapProjectRole(dto.role),
+  isActive: dto.is_active ?? true,
 })
 
 export const mapUpdateProject = (request: UpdateProjectRequest): UpdateProjectRequestDTO => ({
