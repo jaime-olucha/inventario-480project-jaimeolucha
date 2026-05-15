@@ -1,38 +1,35 @@
 import ProjectMenuBar, { type ProjectTab } from "@/ui/components/menuItem/ProjectMenuItem";
 import { useNavigate, useParams } from "react-router-dom";
-import { useUserStore } from "@/infrastructure/store/user.store";
 import { useRepositories } from "@/infrastructure/RepositoryContext/RepositoryContext";
 import { useCallback, useEffect, useState } from "react";
 import { ROUTES } from "@/ui/routes/routes";
 import type { EntityId } from "@/domain/value-objects/EntityId";
 import { ArrowLeft, FolderX, Trash2, UserCheck } from "lucide-react";
-import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
 import { ConfirmModal } from "@/ui/components/molecules/confirmModal/ConfirmModal";
 import { Toast } from "@/ui/components/molecules/toast/Toast";
 import './ProjectDetailPage.scss';
 import '@/ui/components/molecules/confirmModal/ConfirmModal.scss';
 import { getErrorMessage } from "@/infrastructure/helpers/getErrorMessage";
-import type { Project } from "@/domain/models/Project/Project";
-import { ProjectInfo } from "@/ui/components/projectInfo/ProjectInfo";
-import { ProjecTeam } from "@/ui/components/projectTeam/ProjecTeam";
-import { ProjectClients } from "@/ui/components/projectClients/ProjectClients";
-import { ProjectDevelopment } from "@/ui/components/projectDevelopments/ProjectDevelopment";
-import { ProjectHours } from "@/ui/components/projectHours/ProjectHours";
+import type { ProjectDetail } from "@/domain/models/Project/ProjectDetail";
+import { ProjectInfo } from "@/ui/components/organisms/projectInfo/ProjectInfo";
+import { ProjecTeam } from "@/ui/components/organisms/projectTeam/ProjecTeam";
+import { ProjectClients } from "@/ui/components/organisms/projectClients/ProjectClients";
+import { ProjectDevelopment } from "@/ui/components/organisms/projectDevelopments/ProjectDevelopment";
+import { ProjectHours } from "@/ui/components/organisms/projectHours/ProjectHours";
 
 export const ProjectDetailPage = () => {
 
   const { id } = useParams<{ id: EntityId }>();
   const navigate = useNavigate();
-  const userStore = useUserStore((store) => store.user);
   const { project: projectRepo } = useRepositories();
-  const [targetProject, setTargetProject] = useState<Project>();
+  const [targetProject, setTargetProject] = useState<ProjectDetail>();
   const [modalActive, setModalActive] = useState<"inactivar" | "activar" | "eliminar" | null>(null);
   const [loadingPatch, setLoadingPatch] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [activeTab, setActiveTab] = useState<ProjectTab>('info');
 
-  const isAdmin = userStore?.role === SYSTEM_ROLES.ADMIN;
-  const isMyProfile = userStore?.id === targetProject?.id;
+  const canEdit = targetProject?.permissions.canEdit ?? false;
+  const canDelete = targetProject?.permissions.canDelete ?? false;
 
   useEffect(() => {
     if (!id) return;
@@ -123,34 +120,36 @@ export const ProjectDetailPage = () => {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1>{isMyProfile ? "Mi Perfil" : "Detalle de Personal"}</h1>
-            <p className="info">
-              {isMyProfile ? "Tu información completa y proyectos" : "Información completa del empleado"}
-            </p>
+            <h1>Detalle del Proyecto</h1>
+            <p className="info">Información completa del proyecto</p>
           </div>
         </div>
 
-        {isAdmin && !isMyProfile && (
+        {(canEdit || canDelete) && (
           <div className="header-actions">
-            {targetProject?.isActive ? (
-              <button className="btn-action btn-inactivar" onClick={() => setModalActive("inactivar")}>
-                <FolderX size={15} /> Inactivar
-              </button>
-            ) : (
-              <button className="btn-action btn-activar" onClick={() => setModalActive("activar")}>
-                <UserCheck size={15} /> Activar
+            {canEdit && (
+              targetProject?.isActive ? (
+                <button className="btn-action btn-inactivar" onClick={() => setModalActive("inactivar")}>
+                  <FolderX size={15} /> Inactivar
+                </button>
+              ) : (
+                <button className="btn-action btn-activar" onClick={() => setModalActive("activar")}>
+                  <UserCheck size={15} /> Activar
+                </button>
+              )
+            )}
+            {canDelete && (
+              <button className="btn-action btn-eliminar" onClick={() => setModalActive("eliminar")}>
+                <Trash2 size={15} /> Eliminar
               </button>
             )}
-            <button className="btn-action btn-eliminar" onClick={() => setModalActive("eliminar")}>
-              <Trash2 size={15} /> Eliminar
-            </button>
           </div>
         )}
       </div>
       <ProjectMenuBar activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div className="project-detail-page_content">
-        {activeTab === 'info' && <ProjectInfo />}
+        {activeTab === 'info' && <ProjectInfo isActive={targetProject?.isActive} />}
         {activeTab === 'equipo' && <ProjecTeam />}
         {activeTab === 'cliente' && <ProjectClients />}
         {activeTab === 'desarrollo' && <ProjectDevelopment />}
