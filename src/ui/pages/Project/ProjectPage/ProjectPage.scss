@@ -51,51 +51,6 @@
     justify-content: space-between;
   }
 
-  .add_record {
-    height: fit-content;
-    width: fit-content;
-    padding: 8px;
-    background-color: var(--primary);
-    border-radius: 10px;
-    transition: background-color 300ms ease;
-    font-weight: 600;
-    cursor: pointer;
-
-    .iconBtn {
-      display: inline-flex;
-      height: 20px;
-      width: 20px;
-      padding-bottom: 3px;
-      vertical-align: middle;
-      margin-right: 6px;
-    }
-
-    &:hover {
-      background-color: var(--primary-hover);
-    }
-
-    &--fab {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      z-index: 50;
-      border-radius: 50%;
-      width: 52px;
-      height: 52px;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-      animation: fab-in 180ms ease;
-
-      .iconBtn {
-        margin: 0;
-        padding: 0;
-      }
-    }
-  }
-
   @keyframes fab-in {
     from { transform: scale(0.6); opacity: 0; }
     to   { transform: scale(1);   opacity: 1; }
@@ -136,25 +91,6 @@
       background-color: var(--primary);
     }
 
-    .card_badge {
-      padding: 4px 6px;
-      font-size: 11px;
-      font-weight: bold;
-      background-color: #ffe2e2;
-      color: rgb(202, 14, 14);
-      border-radius: 10px;
-      margin-left: 5px;
-    }
-
-    .badge-active {
-      background-color: #e9ffe2;
-      color: rgb(73, 202, 14);
-    }
-
-    .badge-inactive {
-      background-color: #ebebeb;
-      color: rgb(100, 100, 100);
-    }
   }
 
   .project-list {

@@ -168,20 +168,5 @@
         background-color: #f3f4f6;
       }
     }
-
-    .btn_primary {
-      padding: 8px 16px;
-      border-radius: 8px;
-      background-color: var(--primary);
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      color: #111827;
-      transition: background-color 200ms ease;
-
-      &:hover {
-        background-color: var(--primary-hover);
-      }
-    }
   }
 }

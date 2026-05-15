@@ -14,6 +14,7 @@ import { SYSTEM_ROLES } from "@/domain/value-objects/SystemRole";
 import { ConfirmModal } from "@/ui/components/molecules/confirmModal/ConfirmModal";
 import { getErrorMessage } from "@/infrastructure/helpers/getErrorMessage";
 import { Toast } from "@/ui/components/molecules/toast/Toast";
+import { ActionButton } from "@/ui/components/molecules/actionButton/ActionButton";
 import type { UpdateUserRequest } from "@/domain/models/User/UpdateUserRequest";
 import '@/ui/components/molecules/confirmModal/ConfirmModal.scss';
 
@@ -216,16 +217,13 @@ export const PersonalDetailPage = () => {
         <div className="profile-card_top">
           <span className="section-label">Información Personal</span>
           {isAdmin && !isEditing && (
-            <button className="btn-edit" onClick={handleEditClick}>
-              <Edit2 size={14} /> Editar
-            </button>
+            <ActionButton compact icon={<Edit2 size={14} />} onClick={handleEditClick}>Editar</ActionButton>
           )}
           {isAdmin && isEditing && (
             <div className="edit-actions">
-              <button className="btn-save" onClick={handleSave} disabled={loadingPatch}>
-                <Save size={16} />
+              <ActionButton compact icon={<Save size={16} />} onClick={handleSave} disabled={loadingPatch}>
                 {loadingPatch ? "Guardando..." : "Guardar"}
-              </button>
+              </ActionButton>
               <button className="btn-cancel" onClick={() => setIsEditing(false)}>
                 <X size={16} />
                 Cancelar
